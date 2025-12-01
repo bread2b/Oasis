@@ -16,7 +16,7 @@ public class Player {
         this.width = width;
         this.height = height;
 
-        texture = new Texture("textures/player.png"); // 存在 core/assets/player.png
+        texture = new Texture("textures/player.png"); // 人物图像存在 core/assets/player.png
     }
 
     public void move(float dx, float dy) {
