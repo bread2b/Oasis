@@ -5,8 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -23,21 +22,24 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game) {
         this.game = game;
 
+        // 📷 相机
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1280, 720);
+        camera.setToOrtho(false, 960, 540);
 
-        // ⭐ 加载 Tiled 地图
-        tiledMap = new TmxMapLoader().load("maps/forest.tmx");
+        // 🧱 加载地图（Nearest 采样，必须）
+        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
+        params.textureMinFilter = Texture.TextureFilter.Nearest;
+        params.textureMagFilter = Texture.TextureFilter.Nearest;
+
+        tiledMap = new TmxMapLoader().load("maps/sxm.tmx", params);
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f);
 
-        player = new Player(100, 100, 16, 16);
+        // 🧍 人物（32×32）
+        player = new Player(900, 300, 32, 32);
     }
 
-    @Override
-    public void show() { }
-
     private void handleInput(float delta) {
-        float speed = 100f;
+        float speed = 96f; // 慢、稳
 
         float dx = 0;
         float dy = 0;
@@ -50,42 +52,40 @@ public class GameScreen implements Screen {
         player.move(dx, dy);
     }
 
+    private void updateCamera() {
+        float camX = Math.round(player.getX() + player.getWidth() / 2f);
+        float camY = Math.round(player.getY() + player.getHeight() / 2f);
+
+        camera.position.set(camX, camY, 0);
+        camera.zoom = 1f;
+        camera.update();
+    }
+
     @Override
     public void render(float delta) {
         handleInput(delta);
-
-        //camera.position.set(player.getX(), player.getY(), 0);//硬跟随摄像机
-        camera.position.lerp(new Vector3(player.getX(), player.getY(), 0), 0.1f);//平滑摄像机
-        camera.zoom=(0.7f);
-        camera.update();
+        updateCamera();
 
         Gdx.gl.glClearColor(0.05f, 0.25f, 0.05f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // ⭐ 渲染地图
-        float w = camera.viewportWidth * camera.zoom;
-        float h = camera.viewportHeight * camera.zoom;
-
-        mapRenderer.setView(
-            camera.combined,
-            camera.position.x - w / 2f,
-            camera.position.y - h / 2f,
-            w,
-            h
-        );
+        // 🧱 渲染地图
+        mapRenderer.setView(camera);
         mapRenderer.render();
 
-        // ⭐ 渲染玩家
+        // 🧍 渲染人物
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         player.render(game.batch);
         game.batch.end();
     }
 
-    @Override public void resize(int width, int height) { }
-    @Override public void pause() { }
-    @Override public void resume() { }
-    @Override public void hide() { }
+    @Override public void resize(int width, int height) {}
+    @Override public void show() {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
+
     @Override
     public void dispose() {
         tiledMap.dispose();
