@@ -19,6 +19,8 @@ public class GameScreen implements Screen {
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer mapRenderer;
 
+    private Hud hud;
+
     public GameScreen(MainGame game) {
         this.game = game;
 
@@ -36,6 +38,9 @@ public class GameScreen implements Screen {
 
         // 🧍 人物（32×32）
         player = new Player(900, 300, 32, 32);
+
+        //hud
+        hud = new Hud(1280, 720);
     }
 
     private void handleInput(float delta) {
@@ -78,9 +83,14 @@ public class GameScreen implements Screen {
         game.batch.begin();
         player.render(game.batch);
         game.batch.end();
+
+        //hud 
+        hud.render(game.batch, player);
     }
 
-    @Override public void resize(int width, int height) {}
+    @Override public void resize(int width, int height) {
+        hud.resize(width, height);
+    }
     @Override public void show() {}
     @Override public void pause() {}
     @Override public void resume() {}
@@ -90,5 +100,10 @@ public class GameScreen implements Screen {
     public void dispose() {
         tiledMap.dispose();
         mapRenderer.dispose();
+        hud.dispose();
     }
+
+    
+
+    
 }
