@@ -10,37 +10,37 @@ public class Hud {
     private BitmapFont font;
 
     public Hud(int screenWidth, int screenHeight) {
-        // HUD 相机（屏幕坐标系）
+        // HUD 使用屏幕坐标系
         camera = new OrthographicCamera();
         camera.setToOrtho(false, screenWidth, screenHeight);
 
-        // 字体（调试足够）
         font = new BitmapFont();
         font.getData().setScale(1.2f);
     }
 
     /**
-     * 渲染 HUD（左下角坐标显示）
+     * 渲染 HUD（左下角显示像素坐标）
      */
     public void render(SpriteBatch batch, Player player) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        float x = player.getCenterX();
-        float y = player.getCenterY();
+        // 直接显示整数像素坐标
+        int x = player.getX();
+        int y = player.getY();
 
         font.draw(
                 batch,
-                String.format("X: %.1f  Y: %.1f", x, y),
+                "X: " + x + "  Y: " + y,
                 10,
-                20
+                24
         );
 
         batch.end();
     }
 
     /**
-     * 窗口尺寸变化时调用
+     * 窗口尺寸变化
      */
     public void resize(int width, int height) {
         camera.setToOrtho(false, width, height);
