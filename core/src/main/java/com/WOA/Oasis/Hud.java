@@ -15,7 +15,7 @@ public class Hud {
         camera.setToOrtho(false, screenWidth, screenHeight);
 
         font = new BitmapFont();
-        font.getData().setScale(1.2f);
+        font.getData().setScale(2f);
     }
 
     /**
