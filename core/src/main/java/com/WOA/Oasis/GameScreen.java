@@ -78,7 +78,12 @@ public class GameScreen implements Screen {
         trees.add(new Mangotree(750, 400, Mangotree.State.ADULT));
         trees.add(new Mangotree(800, 350, Mangotree.State.ADULT));
         trees.add(new Mangotree(800, 400, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(850, 400, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(900, 350, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(1000, 350, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(1100, 350, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(900, 250, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(1000, 250, Mangotree.State.ADULT));
+        trees.add(new Coconuttree(1100, 250, Mangotree.State.ADULT));
     }
 
     /**
