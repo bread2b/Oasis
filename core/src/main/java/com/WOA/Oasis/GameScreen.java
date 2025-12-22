@@ -65,11 +65,11 @@ public class GameScreen implements Screen {
         tiledMap = new TmxMapLoader().load("maps/sxm.tmx", params);
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f);
 
-        player = new Player(800, 300, 32, 32);
+        player = new Player(500, 650, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // 测试芒果树
-        trees.add(new Mangotree(700, 300, Mangotree.State.ADULT));
+        trees.add(new Mangotree(400, 800, Mangotree.State.ADULT));
         
         trees.add(new Coconuttree(450, 580, Mangotree.State.ADULT));
        
