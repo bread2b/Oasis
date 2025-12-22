@@ -65,25 +65,14 @@ public class GameScreen implements Screen {
         tiledMap = new TmxMapLoader().load("maps/sxm.tmx", params);
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f);
 
-        player = new Player(900, 300, 32, 32);
+        player = new Player(800, 300, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // 测试芒果树
         trees.add(new Mangotree(700, 300, Mangotree.State.ADULT));
-        trees.add(new Mangotree(750, 300, Mangotree.State.ADULT));
-        trees.add(new Mangotree(800, 300, Mangotree.State.ADULT));
-        trees.add(new Mangotree(700, 350, Mangotree.State.ADULT));
-        trees.add(new Mangotree(700, 400, Mangotree.State.ADULT));
-        trees.add(new Mangotree(750, 350, Mangotree.State.ADULT));
-        trees.add(new Mangotree(750, 400, Mangotree.State.ADULT));
-        trees.add(new Mangotree(800, 350, Mangotree.State.ADULT));
-        trees.add(new Mangotree(800, 400, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(900, 350, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(1000, 350, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(1100, 350, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(900, 250, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(1000, 250, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(1100, 250, Mangotree.State.ADULT));
+        
+        trees.add(new Coconuttree(450, 580, Mangotree.State.ADULT));
+       
     }
 
     /**
