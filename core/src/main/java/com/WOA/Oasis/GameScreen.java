@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -69,13 +71,28 @@ public class GameScreen implements Screen {
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // 测试芒果树
-        trees.add(new Mangotree(400, 800, Mangotree.State.ADULT));
+        loadTreesFromTiled();
         
-        trees.add(new Coconuttree(1000, 950, Mangotree.State.ADULT));
-        trees.add(new Coconuttree(1300, 950, Mangotree.State.ADULT));
        
     }
+    private void loadTreesFromTiled() {
+    MapLayer layer = tiledMap.getLayers().get("trees");
+    if (layer == null) return;
 
+    for (MapObject obj : layer.getObjects()) {
+        float x = obj.getProperties().get("x", Float.class);
+        float y = obj.getProperties().get("y", Float.class);
+
+        String type  = obj.getProperties().get("type", String.class);
+        String state = obj.getProperties().get("state", String.class);
+
+        if ("mango".equals(type)) {
+            trees.add(new Mangotree(x, y, Mangotree.State.valueOf(state)));
+        } else if ("coconut".equals(type)) {
+            trees.add(new Coconuttree(x, y, Mangotree.State.valueOf(state)));
+        }
+    }
+    }
     /**
      * ⭐ 摄像机像素对齐（防 1px 抖动）
      */
@@ -176,4 +193,5 @@ public class GameScreen implements Screen {
         mapRenderer.dispose();
         hud.dispose();
     }
+    
 }
