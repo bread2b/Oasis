@@ -20,6 +20,7 @@ import com.WOA.Oasis.Inventory.Item;
 import com.WOA.Oasis.World.Tree.Coconuttree;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.TreeBase;
+import com.WOA.Oasis.World.Dropresult;
 
 public class GameScreen implements Screen {
 
@@ -150,12 +151,18 @@ public class GameScreen implements Screen {
         // E 键采摘
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             for (TreeBase tree : trees) {
-            if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
-                tree.harvest();
-                break;
+                if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
+                    // 1️⃣ 从树拿掉落（现在只是取，不是用 Tree 操作背包）
+                    Dropresult drop = tree.getHarvestdrop();
+                    // 2️⃣ 放进玩家背包
+                    if (drop != null) {
+                        player.Getbag().Additem(drop.item, drop.amount);
+                    }
+                    // 3️⃣ 改变树状态
+                    tree.harvest();
+                    break;
+                }
             }
-            }
-
         }
 
 

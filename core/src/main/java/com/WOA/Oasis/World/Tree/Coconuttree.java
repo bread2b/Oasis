@@ -1,5 +1,7 @@
 package com.WOA.Oasis.World.Tree;
 
+import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.World.Dropresult;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Coconuttree extends TreeBase {
@@ -21,7 +23,13 @@ public class Coconuttree extends TreeBase {
     @Override protected String getHarvestMessage() {
         return "🥥 椰子已采摘！";
     }
-
+    @Override 
+    public Dropresult getHarvestdrop() {
+    return new Dropresult(
+        Itemregistry.Coconut,
+        1
+    );
+}
     @Override protected String getChopMessage() {
         return "🪓 砍椰子树";
     }
