@@ -19,5 +19,21 @@
    <wangtile tileid="454" wangid="0,1,0,0,0,0,0,1"/>
    <wangtile tileid="455" wangid="0,0,0,0,0,0,0,1"/>
   </wangset>
+  <wangset name="sea" type="corner" tile="-1">
+   <wangcolor name="water" color="#ff0000" tile="-1" probability="1"/>
+   <wangtile tileid="518" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="520" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="550" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="580" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="582" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="608" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="609" wangid="0,0,0,1,0,1,0,0"/>
+   <wangtile tileid="610" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="639" wangid="0,1,0,1,0,0,0,0"/>
+   <wangtile tileid="641" wangid="0,0,0,0,0,1,0,1"/>
+   <wangtile tileid="670" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="671" wangid="0,1,0,0,0,0,0,1"/>
+   <wangtile tileid="672" wangid="0,0,0,0,0,0,0,1"/>
+  </wangset>
  </wangsets>
 </tileset>
