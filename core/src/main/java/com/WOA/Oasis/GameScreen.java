@@ -97,22 +97,23 @@ public class GameScreen implements Screen {
        
     }
     private void loadTreesFromTiled() {
-    MapLayer layer = tiledMap.getLayers().get("trees");
-    if (layer == null) return;
+        MapLayer layer = tiledMap.getLayers().get("trees");
+        if (layer == null) return;
 
-    for (MapObject obj : layer.getObjects()) {
-        float x = obj.getProperties().get("x", Float.class);
-        float y = obj.getProperties().get("y", Float.class);
+        for (MapObject obj : layer.getObjects()) {
+            float x = obj.getProperties().get("x", Float.class);
+            float y = obj.getProperties().get("y", Float.class);
 
-        String type  = obj.getProperties().get("type", String.class);
-        String state = obj.getProperties().get("state", String.class);
+            String type  = obj.getProperties().get("type", String.class);
+            String state = obj.getProperties().get("state", String.class);
 
         if ("mango".equals(type)) {
             trees.add(new Mangotree(x, y, Mangotree.State.valueOf(state)));
-        } else if ("coconut".equals(type)) {
+        } 
+        else if ("coconut".equals(type)) {
             trees.add(new Coconuttree(x, y, Mangotree.State.valueOf(state)));
         }
-    }
+        }
     }
     /**
      * ⭐ 摄像机像素对齐（防 1px 抖动）
@@ -129,10 +130,10 @@ public class GameScreen implements Screen {
         camera.update();
     }
     private void Handlehotbarkeys() {
-    for (int i = 0; i < 8; i++) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1 + i)) {
-            player.Getbag().selecthotbar(i);
-        }
+        for (int i = 0; i < 8; i++) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1 + i)) {
+                player.Getbag().selecthotbar(i);
+            }
         }
     }
     @Override
@@ -202,7 +203,7 @@ public class GameScreen implements Screen {
         game.batch.begin();
         player.render(game.batch);
         for (TreeBase tree : trees) {
-        tree.render(game.batch);
+            tree.render(game.batch);
         }
         game.batch.end();
 
