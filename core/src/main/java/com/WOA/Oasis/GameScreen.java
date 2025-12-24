@@ -16,6 +16,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import com.WOA.Oasis.Inventory.Item;
+import com.WOA.Oasis.World.Tree.Coconuttree;
+import com.WOA.Oasis.World.Tree.Mangotree;
+import com.WOA.Oasis.World.Tree.TreeBase;
+
 public class GameScreen implements Screen {
 
     private final MainGame game;
@@ -70,6 +75,21 @@ public class GameScreen implements Screen {
         player = new Player(1150, 900, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        // ===== 测试物品 =====
+        Item Axe = new Item(
+            "Axe",
+            new Texture("items/axe.png"),
+            1
+        );
+
+        Item Wood = new Item(
+            "Wood",
+            new Texture("items/wood.png"),
+            99
+        );
+
+        player.Getbag().Additem(Axe, 1);
+        player.Getbag().Additem(Wood, 20);
         // 测试芒果树
         loadTreesFromTiled();
         
@@ -107,10 +127,16 @@ public class GameScreen implements Screen {
         );
         camera.update();
     }
-
+    private void Handlehotbarkeys() {
+    for (int i = 0; i < 8; i++) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1 + i)) {
+            player.Getbag().selecthotbar(i);
+        }
+        }
+    }
     @Override
     public void render(float delta) {
-
+        Handlehotbarkeys();
         // 砍树
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             for (TreeBase tree : trees) {
@@ -145,6 +171,7 @@ public class GameScreen implements Screen {
                 );
             }
         }
+        
 
         // 固定步长更新
         accumulator += delta;

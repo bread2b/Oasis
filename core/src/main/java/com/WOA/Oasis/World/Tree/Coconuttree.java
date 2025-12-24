@@ -1,4 +1,4 @@
-package com.WOA.Oasis;
+package com.WOA.Oasis.World.Tree;
 
 import com.badlogic.gdx.graphics.Texture;
 

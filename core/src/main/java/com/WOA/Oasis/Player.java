@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import com.WOA.Oasis.Inventory.Bag;
+
 public class Player {
 
     // ⭐ 星露谷方式：像素整数坐标
@@ -24,12 +26,15 @@ public class Player {
     private Animation<TextureRegion> walkUp, walkDown, walkLeft, walkRight;
     private TextureRegion idleFrame;
     private TextureRegion currentFrame;
+    private Bag bag;
 
     public Player(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+
+        bag = new Bag();
 
         Texture idleTex = new Texture(Gdx.files.internal("textures/mainplayer.png"));
         idleTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -92,4 +97,7 @@ public class Player {
     public int getY() { return y; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
+    public Bag Getbag() {
+        return bag;
+    }
 }
