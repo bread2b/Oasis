@@ -1,5 +1,6 @@
 package com.WOA.Oasis.World.Tree;
 
+import com.WOA.Oasis.World.Dropresult;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -91,5 +92,9 @@ public abstract class TreeBase {
 
     public boolean canChop() {
         return state == State.ADULT || state == State.HARVESTED;
+    }
+    // 树的掉落物品
+    public Dropresult getHarvestdrop(){
+        return null;
     }
 }
