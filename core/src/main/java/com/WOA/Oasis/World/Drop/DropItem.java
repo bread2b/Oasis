@@ -14,12 +14,13 @@ public class DropItem {
     public Item Item;
     public int Amount;
 
-    // 掉落物大小（像素）
     public static final float BASE_SIZE = 32f;
-    public static final float WORLD_SCALE = 0.5f; // ⭐ 世界里缩小一半
+    public static final float WORLD_SCALE = 0.5f;
     public static final float SIZE = BASE_SIZE * WORLD_SCALE;
-    // 安全时间
+
+    // ⭐ 吸附相关
     public float AliveTime = 0f;
+    public boolean IsAttracting = false;
 
     public DropItem(float x, float y, Item item, int amount) {
         Position = new Vector2(x, y);
@@ -30,13 +31,13 @@ public class DropItem {
     public void Update(float delta) {
         AliveTime += delta;
     }
+
+    // ⭐ 向目标吸附（lerp）
+    public void AttractTo(float targetX, float targetY, float speed) {
+        Position.lerp(new Vector2(targetX, targetY), speed);
+    }
+
     public void Render(SpriteBatch batch) {
-        batch.draw(
-            Item.Icon,
-            Position.x,
-            Position.y,
-            SIZE,
-            SIZE
-        );
+        batch.draw(Item.Icon, Position.x, Position.y, SIZE, SIZE);
     }
 }

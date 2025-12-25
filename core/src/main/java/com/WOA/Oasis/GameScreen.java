@@ -216,12 +216,13 @@ public class GameScreen implements Screen {
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        player.render(game.batch);
+        
 
         dropManager.Render(game.batch);
         for (TreeBase tree : trees) {
             tree.render(game.batch);
         }
+        player.render(game.batch);
         game.batch.end();
 
         // HUD（屏幕坐标）

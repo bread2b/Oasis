@@ -20,37 +20,54 @@ public class WorldDropManager {
     // ⭐ 每帧更新（靠近拾取 + 掉落保护）
     public void Update(Player player, float delta) {
 
-        float radius = player.getPickupRadius();
-        float radius2 = radius * radius;
+    float pickupRadius = player.getPickupRadius();
+    float pickupRadius2 = pickupRadius * pickupRadius;
 
-        for (int i = drops.size - 1; i >= 0; i--) {
+    // ⭐ 吸附参数
+    final float ATTRACT_RADIUS = pickupRadius * 1.2f; // 吸附半径
+    final float ATTRACT_RADIUS2 = ATTRACT_RADIUS * ATTRACT_RADIUS;
+    final float ATTRACT_SPEED = 0.21f;                // 吸附速度
+    final float PICK_DISTANCE2 = 6f * 6f;              // 贴近即拾取
 
-            DropItem drop = drops.get(i);
+    for (int i = drops.size - 1; i >= 0; i--) {
 
-            // ⭐ 累计存活时间
-            drop.Update(delta);
+        DropItem drop = drops.get(i);
 
-            // ⭐ 0.3 秒掉落保护期（防止瞬间被捡）
-            if (drop.AliveTime < 0.5f) {
-                continue;
-            }
+        // 累计存活时间（掉落保护）
+        drop.Update(delta);
+        if (drop.AliveTime < 0.3f) continue;
 
-            float dx = player.getCenterX()
-                    - (drop.Position.x + DropItem.SIZE / 2f);
-            float dy = player.getCenterY()
-                    - (drop.Position.y + DropItem.SIZE / 2f);
+        float dropCx = drop.Position.x + DropItem.SIZE / 2f;
+        float dropCy = drop.Position.y + DropItem.SIZE / 2f;
 
-            if (dx * dx + dy * dy <= radius2) {
+        float dx = player.getCenterX() - dropCx;
+        float dy = player.getCenterY() - dropCy;
+        float dist2 = dx * dx + dy * dy;
 
-                boolean success =
-                        player.Getbag().Additem(drop.Item, drop.Amount);
+        // ⭐ 进入吸附半径 → 开始吸附
+        if (dist2 <= ATTRACT_RADIUS2) {
+            drop.IsAttracting = true;
+        }
 
-                if (success) {
-                    drops.removeIndex(i);
-                }
+        // ⭐ 吸附中：向玩家移动
+        if (drop.IsAttracting) {
+            drop.AttractTo(
+                player.getCenterX() - DropItem.SIZE / 2f,
+                player.getCenterY() - DropItem.SIZE / 2f,
+                ATTRACT_SPEED
+            );
+        }
+
+        // ⭐ 足够近 → 真正拾取
+        if (dist2 <= PICK_DISTANCE2) {
+            boolean success =
+                    player.Getbag().Additem(drop.Item, drop.Amount);
+            if (success) {
+                drops.removeIndex(i);
             }
         }
     }
+}
 
     // 渲染掉落物
     public void Render(SpriteBatch batch) {
