@@ -21,6 +21,7 @@ import com.WOA.Oasis.World.Tree.Coconuttree;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Dropresult;
+import com.WOA.Oasis.Inventory.Itemregistry;
 
 public class GameScreen implements Screen {
 
@@ -77,11 +78,11 @@ public class GameScreen implements Screen {
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // ===== 测试物品 =====
-        Item Axe = new Item(
-            "Axe",
-            new Texture("items/axe.png"),
-            1
-        );
+        // Item Axe = new Item(
+        //     "Axe",
+        //     new Texture("items/axe.png"),
+        //     1
+        // );
 
         Item Wood = new Item(
             "Wood",
@@ -89,7 +90,7 @@ public class GameScreen implements Screen {
             99
         );
 
-        player.Getbag().Additem(Axe, 1);
+        player.Getbag().Additem(Itemregistry.Axe, 1);
         player.Getbag().Additem(Wood, 20);
         // 测试芒果树
         loadTreesFromTiled();
@@ -141,13 +142,20 @@ public class GameScreen implements Screen {
         Handlehotbarkeys();
         // 砍树
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            for (TreeBase tree : trees) {
-            if (tree.isNear(player.getX(), player.getY()) && tree.canChop()) {
-            tree.chopOnce();
-            break;
-            }
-            }   
 
+            Item held = player.Getbag().getSelectedItem();
+
+            // ⭐ 关键判断：必须是斧子
+            if (!(held instanceof com.WOA.Oasis.Inventory.Items.Axeitem)) {
+                return; // 没斧子，直接不砍
+            }
+
+            for (TreeBase tree : trees) {
+                if (tree.isNear(player.getX(), player.getY()) && tree.canChop()) {
+                    tree.chopOnce();
+                    break;
+                }
+            }
         }
         // E 键采摘
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {

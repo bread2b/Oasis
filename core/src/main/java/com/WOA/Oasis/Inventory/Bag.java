@@ -24,6 +24,11 @@ public class Bag {
         return slots[selectedHotbarIndex];
     }
 
+    public Item getSelectedItem() {
+    Itemstack stack = getSelected();
+    return (stack == null || stack.Isempty()) ? null : stack.Item;
+}
+
     public void selecthotbar(int index) {
         if (index >= 0 && index < HOTBAR_SLOTS) {
             selectedHotbarIndex = index;

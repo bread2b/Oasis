@@ -1,5 +1,6 @@
 package com.WOA.Oasis.Inventory;
 
+import com.WOA.Oasis.Inventory.Items.Axeitem;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Itemregistry {
@@ -20,12 +21,7 @@ public class Itemregistry {
         );
 
     // ===== 工具 =====
-    public static final Item Axe =
-        new Item(
-            "axe",
-            new Texture("items/axe.png"),
-            1
-        );
+    public static final Item Axe = new Axeitem();
 
     // 禁止实例化
     private Itemregistry() {}
