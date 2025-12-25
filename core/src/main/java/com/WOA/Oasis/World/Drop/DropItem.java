@@ -15,7 +15,7 @@ public class DropItem {
     public int Amount;
 
     public static final float BASE_SIZE = 32f;
-    public static final float WORLD_SCALE = 0.5f;
+    public static final float WORLD_SCALE = 0.6f;
     public static final float SIZE = BASE_SIZE * WORLD_SCALE;
 
     // ⭐ 吸附相关
@@ -40,4 +40,5 @@ public class DropItem {
     public void Render(SpriteBatch batch) {
         batch.draw(Item.Icon, Position.x, Position.y, SIZE, SIZE);
     }
+
 }

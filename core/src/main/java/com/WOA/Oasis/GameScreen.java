@@ -81,7 +81,7 @@ public class GameScreen implements Screen {
 
         player = new Player(1150, 900, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        dropManager = new WorldDropManager();
+        dropManager = WorldDropManager.getInstance();
 
         // ===== 测试物品 =====
         // Item Axe = new Item(
@@ -90,9 +90,10 @@ public class GameScreen implements Screen {
         //     1
         // );
 
-
         player.Getbag().Additem(Itemregistry.Axe, 1);
+        player.Getbag().Additem(Itemregistry.Pick, 1);
         player.Getbag().Additem(Itemregistry.Wood, 20);
+        
         // 测试芒果树
         loadTreesFromTiled();
         
@@ -145,18 +146,21 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 
             Item held = player.Getbag().getSelectedItem();
+            if (held == null) return;
 
-            // ⭐ 关键判断：必须是斧子
-            if (!(held instanceof com.WOA.Oasis.Inventory.Items.Axeitem)) {
-                return; // 没斧子，直接不砍
-            }
+            for (int i = trees.size - 1; i >= 0; i--) {
+                TreeBase tree = trees.get(i);
 
-            for (TreeBase tree : trees) {
-                if (tree.isNear(player.getX(), player.getY()) && tree.canChop()) {
-                    tree.chopOnce();
+                if (tree.isNear(player.getX(), player.getY())) {
+                    boolean remove = tree.interact(held);
+                    if (remove) {
+                        trees.removeIndex(i); // ⭐ 树桩被清除
+                        System.out.println("⛏️ 树桩已清除");
+                    }
                     break;
                 }
             }
+            
         }
         // E 键采摘
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {

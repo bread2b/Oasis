@@ -9,6 +9,13 @@ import com.WOA.Oasis.Player;
  * 统一管理世界中的掉落物
  */
 public class WorldDropManager {
+    private static WorldDropManager instance;
+    public static WorldDropManager getInstance() {
+        if (instance == null) {
+            instance = new WorldDropManager();
+        }
+        return instance;
+    }
 
     private final Array<DropItem> drops = new Array<>();
 
