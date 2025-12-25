@@ -1,8 +1,16 @@
 package com.WOA.Oasis.World.Tree;
 
 import com.WOA.Oasis.World.Dropresult;
+import com.WOA.Oasis.World.Drop.DropItem;
+import com.WOA.Oasis.World.Drop.WorldDropManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.WOA.Oasis.Inventory.Item;
+import com.WOA.Oasis.World.Drop.DropItem;
+import com.WOA.Oasis.Inventory.Item;
+import com.WOA.Oasis.Inventory.Items.Axeitem;
+import com.WOA.Oasis.Inventory.Items.Pickitem;
 
 public abstract class TreeBase {
 
@@ -32,13 +40,37 @@ public abstract class TreeBase {
         this.x = x;
         this.y = y;
         this.state = state;
-
+        
+        System.out.println("🌳 Tree created: state=" + state + ", hp=" + hp);
         // 可砍状态统一 5 HP
         if (state == State.ADULT || state == State.HARVESTED) {
             this.hp = 5;
         } else {
             this.hp = 1;
         }
+    }
+
+    /**
+ * 使用物品与树交互
+ * @return true = 这棵树需要被从世界中移除
+ */
+    public boolean interact(Item item) {
+        if (item == null) return false;
+
+        // 🪓 斧子：砍树
+        if (item instanceof Axeitem) {
+            if (canChop()) {
+                chopOnce();
+            }
+            return false;
+        }
+        // ⛏ 镐子：清树桩
+        if (item instanceof Pickitem) {
+            if (state == State.STUMP) {
+                return true; // 告诉外部：可以删掉
+            }
+        }
+        return false;
     }
 
     public void update(float delta) {
@@ -73,7 +105,7 @@ public abstract class TreeBase {
         System.out.println(getChopMessage() + " HP 剩余：" + hp);
 
         if (hp <= 0) {
-            state = State.STUMP;
+            onChopped();
             System.out.println("🌴 树被砍倒！");
         }
     }
@@ -93,8 +125,39 @@ public abstract class TreeBase {
     public boolean canChop() {
         return state == State.ADULT || state == State.HARVESTED;
     }
+
+    public boolean canRemoveStump() {
+        return state == State.STUMP;
+    }
+
     // 树的掉落物品
-    public Dropresult getHarvestdrop(){
-        return null;
+    public abstract Dropresult getHarvestdrop();
+
+    public abstract Dropresult getChopDrop();
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    protected void onChopped() {
+        Dropresult drop = getChopDrop();
+        if (drop == null) return;
+        for (int i = 0; i < drop.amount; i++) {
+
+        DropItem item = new DropItem(
+            
+            x + MathUtils.random(-6, 6),
+            y + MathUtils.random(-6, 6),
+            drop.item,
+            1
+        );
+
+        WorldDropManager.getInstance().Spawn(item);
+        }
+        state = State.STUMP;
     }
 }

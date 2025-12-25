@@ -2,15 +2,28 @@ package com.WOA.Oasis.Inventory;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class Item {
+/**
+ * Item = 物品定义
+ * 不存位置、不存数量
+ */
+public abstract class Item {
 
-    public String Id;
-    public Texture Icon;
-    public int Maxstack;
+    public final String Id;
+    public final Texture Icon;
+    public final int Maxstack;
 
-    public Item(String id, Texture icon, int maxstack) {
+    protected Item(String id, Texture icon, int maxstack) {
         Id = id;
         Icon = icon;
         Maxstack = maxstack;
+    }
+
+    // 是否可堆叠
+    public boolean Isstackable() {
+        return Maxstack > 1;
+    }
+
+    // 使用（默认空）
+    public void Onuse() {
     }
 }

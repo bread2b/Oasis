@@ -1,32 +1,21 @@
 package com.WOA.Oasis.Inventory;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.WOA.Oasis.Inventory.Items.Axeitem;
+import com.WOA.Oasis.Inventory.Items.Mangoitem;
+import com.WOA.Oasis.Inventory.Items.Coconutitem;
+import com.WOA.Oasis.Inventory.Items.Wooditem;
+import com.WOA.Oasis.Inventory.Items.Pickitem;
 
-public class Itemregistry {
+public final class Itemregistry {
 
-    // ===== 掉落物 =====
-    public static final Item Mango =
-        new Item(
-            "mango",
-            new Texture("items/mango.png"),
-            20
-        );
-
-    public static final Item Coconut =
-        new Item(
-            "coconut",
-            new Texture("items/coconut.png"),
-            20
-        );
+    // ===== 资源 =====
+    public static final Item Mango    = new Mangoitem();
+    public static final Item Coconut  = new Coconutitem();
+    public static final Item Wood     = new Wooditem();
 
     // ===== 工具 =====
-    public static final Item Axe =
-        new Item(
-            "axe",
-            new Texture("items/axe.png"),
-            1
-        );
+    public static final Item Axe = new Axeitem();
+    public static final Item Pick = new Pickitem();
 
-    // 禁止实例化
     private Itemregistry() {}
 }

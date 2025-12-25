@@ -5,7 +5,7 @@ public class Bag {
     public static final int TOTAL_SLOTS = 20;
     public static final int HOTBAR_SLOTS = 8;
 
-    private Itemstack[] slots;
+    private final Itemstack[] slots;
     private int selectedHotbarIndex = 0;
 
     public Bag() {
@@ -24,7 +24,12 @@ public class Bag {
         return slots[selectedHotbarIndex];
     }
 
-    public void selecthotbar(int index) {
+    public Item getSelectedItem() {
+        Itemstack stack = getSelected();
+        return (stack == null || stack.Isempty()) ? null : stack.Item;
+    }
+
+    public void Selecthotbar(int index) {
         if (index >= 0 && index < HOTBAR_SLOTS) {
             selectedHotbarIndex = index;
         }
@@ -34,38 +39,34 @@ public class Bag {
         return selectedHotbarIndex;
     }
 
-    // 自动堆叠
+    /**
+     * 向背包加入物品
+     * @return true = 全部加入成功
+     */
     public boolean Additem(Item item, int amount) {
 
         if (item == null || amount <= 0) return false;
 
-        // 1️⃣ 先堆叠
-        for (int i = 0; i < TOTAL_SLOTS; i++) {
-            Itemstack stack = slots[i];
+        int remain = amount;
 
-            if (!stack.Isempty() && stack.Item == item) {
-                int space = item.Maxstack - stack.Amount;
-                if (space > 0) {
-                    int add = Math.min(space, amount);
-                    stack.Amount += add;
-                    amount -= add;
-                    if (amount <= 0) return true;
-                }
+        // 1️⃣ 先尝试堆叠
+        for (int i = 0; i < TOTAL_SLOTS && remain > 0; i++) {
+            Itemstack stack = slots[i];
+            if (stack.Canstack(item)) {
+                remain = stack.Addamount(remain);
             }
         }
 
-        // 2️⃣ 再放空位
-        for (int i = 0; i < TOTAL_SLOTS; i++) {
+        // 2️⃣ 再放入空位
+        for (int i = 0; i < TOTAL_SLOTS && remain > 0; i++) {
             Itemstack stack = slots[i];
             if (stack.Isempty()) {
-                int add = Math.min(item.Maxstack, amount);
-                stack.Item = item;
-                stack.Amount = add;
-                amount -= add;
-                if (amount <= 0) return true;
+                int add = Math.min(item.Maxstack, remain);
+                stack.Set(item, add);
+                remain -= add;
             }
         }
 
-        return false;
+        return remain == 0;
     }
 }

@@ -29,7 +29,16 @@ public class Mangotree extends TreeBase {
         Itemregistry.Mango,
         1
     );
-}
+    }
+    
+    @Override
+    public Dropresult getChopDrop() {
+        return new Dropresult(
+            Itemregistry.Wood,
+            3
+        );
+    }
+
     @Override protected String getChopMessage() {
         return "🪓 砍芒果树";
     }
