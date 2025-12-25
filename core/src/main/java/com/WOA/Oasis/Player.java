@@ -100,4 +100,22 @@ public class Player {
     public Bag Getbag() {
         return bag;
     }
+
+    // ===== 拾取系统用 =====
+
+    // 玩家中心 X（像素）
+    public float getCenterX() {
+        return x + width / 2f;
+    }
+
+    // 玩家中心 Y（像素）
+    public float getCenterY() {
+        return y + height / 2f;
+    }
+
+    // 拾取半径（像素）
+    public float getPickupRadius() {
+        return 28f;
+    }
+
 }

@@ -97,4 +97,12 @@ public abstract class TreeBase {
     public Dropresult getHarvestdrop(){
         return null;
     }
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
 }

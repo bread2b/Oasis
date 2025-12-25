@@ -205,7 +205,7 @@
     <property name="type" value="coconut"/>
    </properties>
   </object>
-  <object id="8" x="853.372" y="547.427">
+  <object id="8" x="958.564" y="546.078">
    <properties>
     <property name="state" value="ADULT"/>
     <property name="type" value="coconut"/>

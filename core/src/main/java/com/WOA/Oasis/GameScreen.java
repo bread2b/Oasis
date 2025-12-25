@@ -22,6 +22,10 @@ import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Dropresult;
 import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.World.Drop.DropItem;
+import com.WOA.Oasis.World.Drop.WorldDropManager;
+
+
 
 public class GameScreen implements Screen {
 
@@ -46,7 +50,8 @@ public class GameScreen implements Screen {
     // 树
     private Array<TreeBase> trees = new Array<>();
 
-
+    // 掉落物
+    private WorldDropManager dropManager;
 
 
     public GameScreen(MainGame game) {
@@ -76,6 +81,7 @@ public class GameScreen implements Screen {
 
         player = new Player(1150, 900, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        dropManager = new WorldDropManager();
 
         // ===== 测试物品 =====
         // Item Axe = new Item(
@@ -84,14 +90,9 @@ public class GameScreen implements Screen {
         //     1
         // );
 
-        Item Wood = new Item(
-            "Wood",
-            new Texture("items/wood.png"),
-            99
-        );
 
         player.Getbag().Additem(Itemregistry.Axe, 1);
-        player.Getbag().Additem(Wood, 20);
+        player.Getbag().Additem(Itemregistry.Wood, 20);
         // 测试芒果树
         loadTreesFromTiled();
         
@@ -133,7 +134,7 @@ public class GameScreen implements Screen {
     private void Handlehotbarkeys() {
         for (int i = 0; i < 8; i++) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1 + i)) {
-                player.Getbag().selecthotbar(i);
+                player.Getbag().Selecthotbar(i);
             }
         }
     }
@@ -163,13 +164,18 @@ public class GameScreen implements Screen {
                 if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
                     // 1️⃣ 从树拿掉落（现在只是取，不是用 Tree 操作背包）
                     Dropresult drop = tree.getHarvestdrop();
-                    // 2️⃣ 放进玩家背包
-                    if (drop != null) {
-                        player.Getbag().Additem(drop.item, drop.amount);
-                    }
-                    // 3️⃣ 改变树状态
-                    tree.harvest();
-                    break;
+                if (drop != null) {
+                    dropManager.Spawn(
+                        new DropItem(
+                        tree.getX(),
+                        tree.getY(),
+                        drop.item,
+                        drop.amount
+                        )
+                    );
+                }
+                tree.harvest();
+                break;
                 }
             }
         }
@@ -193,6 +199,7 @@ public class GameScreen implements Screen {
         accumulator += delta;
         while (accumulator >= FIXED_STEP) {
             player.update();
+            dropManager.Update(player,FIXED_STEP); 
             updateCamera();
             accumulator -= FIXED_STEP;
         }
@@ -210,6 +217,8 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         player.render(game.batch);
+
+        dropManager.Render(game.batch);
         for (TreeBase tree : trees) {
             tree.render(game.batch);
         }
