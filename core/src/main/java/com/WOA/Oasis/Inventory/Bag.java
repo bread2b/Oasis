@@ -69,4 +69,29 @@ public class Bag {
 
         return remain == 0;
     }
+    /**
+     * 判断背包是否能加入这些物品
+     */
+    public boolean CanAdd(Item item, int amount) {
+
+    int remain = amount;
+
+    for (Itemstack stack : slots) {
+
+        // 空格子 → 一定能放
+        if (stack.Isempty()) {
+            return true;
+        }
+
+        // 同类物品 → 看还能不能堆
+        if (stack.Item == item) {
+            int canAdd = item.Maxstack - stack.Amount;
+            if (canAdd > 0) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 }

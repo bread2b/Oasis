@@ -43,6 +43,7 @@ public class WorldDropManager {
         // 累计存活时间（掉落保护）
         drop.Update(delta);
         if (drop.AliveTime < 0.3f) continue;
+        boolean canPickup = player.Getbag().CanAdd(drop.Item, drop.Amount);
 
         float dropCx = drop.Position.x + DropItem.SIZE / 2f;
         float dropCy = drop.Position.y + DropItem.SIZE / 2f;
@@ -52,12 +53,12 @@ public class WorldDropManager {
         float dist2 = dx * dx + dy * dy;
 
         // ⭐ 进入吸附半径 → 开始吸附
-        if (dist2 <= ATTRACT_RADIUS2) {
+        if (canPickup && dist2 <= ATTRACT_RADIUS2) {
             drop.IsAttracting = true;
         }
 
         // ⭐ 吸附中：向玩家移动
-        if (drop.IsAttracting) {
+        if (drop.IsAttracting && canPickup) {
             drop.AttractTo(
                 player.getCenterX() - DropItem.SIZE / 2f,
                 player.getCenterY() - DropItem.SIZE / 2f,
@@ -66,10 +67,8 @@ public class WorldDropManager {
         }
 
         // ⭐ 足够近 → 真正拾取
-        if (dist2 <= PICK_DISTANCE2) {
-            boolean success =
-                    player.Getbag().Additem(drop.Item, drop.Amount);
-            if (success) {
+        if (canPickup && dist2 <= PICK_DISTANCE2) {
+            if (player.Getbag().Additem(drop.Item, drop.Amount)) {
                 drops.removeIndex(i);
             }
         }
