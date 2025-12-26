@@ -1,4 +1,4 @@
-package com.WOA.Oasis.World;
+package com.WOA.Oasis.World.Drop;
 
 import com.WOA.Oasis.Inventory.Item;
 

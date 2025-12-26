@@ -1,4 +1,4 @@
-package com.WOA.Oasis;
+package com.WOA.Oasis.Ui;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,10 +6,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.WOA.Oasis.Player;
 import com.WOA.Oasis.Inventory.Bag;
 import com.WOA.Oasis.Inventory.Itemstack;
-import com.WOA.Oasis.Ui.ToolbarLayout;
 
 public class Hud {
 

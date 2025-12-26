@@ -1,7 +1,7 @@
 package com.WOA.Oasis.World.Tree;
 
 import com.WOA.Oasis.Inventory.Itemregistry;
-import com.WOA.Oasis.World.Dropresult;
+import com.WOA.Oasis.World.Drop.Dropresult;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Coconuttree extends TreeBase {

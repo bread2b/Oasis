@@ -5,187 +5,101 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import com.WOA.Oasis.Inventory.Item;
-import com.WOA.Oasis.World.Tree.Coconuttree;
-import com.WOA.Oasis.World.Tree.Mangotree;
-import com.WOA.Oasis.World.Tree.TreeBase;
-import com.WOA.Oasis.World.Dropresult;
+import com.WOA.Oasis.Ui.Hud;
+import com.WOA.Oasis.World.WorldManager;
 import com.WOA.Oasis.Inventory.Itemregistry;
-import com.WOA.Oasis.World.Drop.DropItem;
-import com.WOA.Oasis.World.Drop.WorldDropManager;
-
-
 
 public class GameScreen implements Screen {
 
     private final MainGame game;
 
-    // 固定逻辑世界（最小可视区域）
-    private static final int WORLD_WIDTH  = 640;
-    private static final int WORLD_HEIGHT = 360;
-
     private OrthographicCamera camera;
     private Viewport viewport;
 
     private Player player;
-    private TiledMap tiledMap;
-    private OrthogonalTiledMapRenderer mapRenderer;
+    private WorldManager world;
     private Hud hud;
 
-    // 固定更新
     private static final float FIXED_STEP = 1f / 60f;
     private float accumulator = 0f;
-
-    // 树
-    private Array<TreeBase> trees = new Array<>();
-
-    // 掉落物
-    private WorldDropManager dropManager;
-
 
     public GameScreen(MainGame game) {
         this.game = game;
 
-        // 🎥 Camera
         camera = new OrthographicCamera();
-
-        // ⭐ 方案 A：星露谷式 ExtendViewport
-        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+        viewport = new ExtendViewport(640, 360, camera);
         viewport.apply();
 
-        camera.position.set(
-            WORLD_WIDTH / 2f,
-            WORLD_HEIGHT / 2f,
-            0
-        );
+        camera.position.set(320, 180, 0);
         camera.update();
 
-        // 地图加载（像素过滤）
-        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
-        params.textureMinFilter = Texture.TextureFilter.Nearest;
-        params.textureMagFilter = Texture.TextureFilter.Nearest;
-
-        tiledMap = new TmxMapLoader().load("maps/sxm.tmx", params);
-        mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f);
+        TiledMap map = new TmxMapLoader().load("maps/sxm.tmx");
+        world = new WorldManager(map);
 
         player = new Player(1150, 900, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        dropManager = WorldDropManager.getInstance();
 
-        // ===== 测试物品 =====
-        // Item Axe = new Item(
-        //     "Axe",
-        //     new Texture("items/axe.png"),
-        //     1
-        // );
-
+        // 初始物品
         player.Getbag().Additem(Itemregistry.Axe, 1);
         player.Getbag().Additem(Itemregistry.Pick, 1);
         player.Getbag().Additem(Itemregistry.Wood, 20);
-        
-        // 测试芒果树
-        loadTreesFromTiled();
-        
-       
     }
-    private void loadTreesFromTiled() {
-        MapLayer layer = tiledMap.getLayers().get("trees");
-        if (layer == null) return;
 
-        for (MapObject obj : layer.getObjects()) {
-            float x = obj.getProperties().get("x", Float.class);
-            float y = obj.getProperties().get("y", Float.class);
+    @Override
+    public void render(float delta) {
 
-            String type  = obj.getProperties().get("type", String.class);
-            String state = obj.getProperties().get("state", String.class);
+        // ========= 输入 =========
+        handleInput();
 
-        if ("mango".equals(type)) {
-            trees.add(new Mangotree(x, y, Mangotree.State.valueOf(state)));
-        } 
-        else if ("coconut".equals(type)) {
-            trees.add(new Coconuttree(x, y, Mangotree.State.valueOf(state)));
+        // ========= 固定逻辑更新 =========
+        accumulator += delta;
+        while (accumulator >= FIXED_STEP) {
+            player.update();
+            world.update(FIXED_STEP, player);
+            updateCamera();
+            accumulator -= FIXED_STEP;
         }
-        }
-    }
-    /**
-     * ⭐ 摄像机像素对齐（防 1px 抖动）
-     */
-    private void updateCamera() {
-        float cx = player.getX() + player.getWidth()  / 2f;
-        float cy = player.getY() + player.getHeight() / 2f;
 
-        camera.position.set(
-            MathUtils.round(cx),
-            MathUtils.round(cy),
-            0
-        );
-        camera.update();
+        // ========= 渲染 =========
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        viewport.apply();
+        world.getRenderer().setView(camera);
+
+        game.batch.begin();
+        world.render(game.batch);
+        player.render(game.batch);
+        game.batch.end();
+
+        hud.render(game.batch, player);
     }
-    private void Handlehotbarkeys() {
+
+    private void handleInput() {
+
+        // 热键 1~8
         for (int i = 0; i < 8; i++) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1 + i)) {
                 player.Getbag().Selecthotbar(i);
             }
         }
-    }
-    @Override
-    public void render(float delta) {
-        Handlehotbarkeys();
-        // 砍树
+
+        // 交互
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-
-            Item held = player.Getbag().getSelectedItem();
-            if (held == null) return;
-
-            for (int i = trees.size - 1; i >= 0; i--) {
-                TreeBase tree = trees.get(i);
-
-                if (tree.isNear(player.getX(), player.getY())) {
-                    boolean remove = tree.interact(held);
-                    if (remove) {
-                        trees.removeIndex(i); // ⭐ 树桩被清除
-                        System.out.println("⛏️ 树桩已清除");
-                    }
-                    break;
-                }
-            }
-            
+            world.handleTreeInteraction(player);
         }
-        // E 键采摘
+
+        // 采集
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            for (TreeBase tree : trees) {
-                if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
-                    // 1️⃣ 从树拿掉落（现在只是取，不是用 Tree 操作背包）
-                    Dropresult drop = tree.getHarvestdrop();
-                if (drop != null) {
-                    dropManager.Spawn(
-                        new DropItem(
-                        tree.getX(),
-                        tree.getY(),
-                        drop.item,
-                        drop.amount
-                        )
-                    );
-                }
-                tree.harvest();
-                break;
-                }
-            }
+            world.handleHarvest(player);
         }
 
-
-        // 真全屏切换（Ctrl + Enter）
+        // 真·全屏切换
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
                 && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 
@@ -193,62 +107,29 @@ public class GameScreen implements Screen {
                 Gdx.graphics.setWindowedMode(1280, 720);
             } else {
                 Gdx.graphics.setFullscreenMode(
-                    Gdx.graphics.getDisplayMode()
+                        Gdx.graphics.getDisplayMode()
                 );
             }
         }
-        
-
-        // 固定步长更新
-        accumulator += delta;
-        while (accumulator >= FIXED_STEP) {
-            player.update();
-            dropManager.Update(player,FIXED_STEP); 
-            updateCamera();
-            accumulator -= FIXED_STEP;
-        }
-
-        // 清屏
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // ⭐ Viewport 接管一切
-        viewport.apply();
-
-        mapRenderer.setView(camera);
-        mapRenderer.render();
-
-        game.batch.setProjectionMatrix(camera.combined);
-        game.batch.begin();
-        
-
-        dropManager.Render(game.batch);
-        for (TreeBase tree : trees) {
-            tree.render(game.batch);
-        }
-        player.render(game.batch);
-        game.batch.end();
-
-        // HUD（屏幕坐标）
-        hud.render(game.batch, player);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true);
-        hud.resize(width, height);
+    private void updateCamera() {
+        camera.position.set(
+                MathUtils.round(player.getX() + player.getWidth() / 2),
+                MathUtils.round(player.getY() + player.getHeight() / 2),
+                0
+        );
+        camera.update();
+    }
+
+    @Override public void resize(int w, int h) {
+        viewport.update(w, h, true);
+        hud.resize(w, h);
     }
 
     @Override public void show() {}
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}
-
-    @Override
-    public void dispose() {
-        tiledMap.dispose();
-        mapRenderer.dispose();
-        hud.dispose();
-    }
-    
+    @Override public void dispose() {}
 }
