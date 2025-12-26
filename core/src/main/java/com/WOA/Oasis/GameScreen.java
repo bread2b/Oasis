@@ -29,6 +29,8 @@ public class GameScreen implements Screen {
     private static final float FIXED_STEP = 1f / 60f;
     private float accumulator = 0f;
 
+    private boolean bagVisible = false;
+
     public GameScreen(MainGame game) {
         this.game = game;
 
@@ -77,7 +79,7 @@ public class GameScreen implements Screen {
         player.render(game.batch);
         game.batch.end();
 
-        hud.render(game.batch, player);
+        hud.render(game.batch, player, bagVisible);
     }
 
     private void handleInput() {
@@ -110,6 +112,11 @@ public class GameScreen implements Screen {
                         Gdx.graphics.getDisplayMode()
                 );
             }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            bagVisible = !bagVisible;
+        
         }
     }
 

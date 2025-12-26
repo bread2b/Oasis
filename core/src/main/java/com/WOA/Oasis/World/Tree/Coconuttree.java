@@ -34,7 +34,7 @@ public class Coconuttree extends TreeBase {
     public Dropresult getChopDrop() {
         return new Dropresult(
             Itemregistry.Wood,
-            3
+            300
         );
     }
     @Override protected String getChopMessage() {

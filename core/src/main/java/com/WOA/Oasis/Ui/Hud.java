@@ -16,6 +16,9 @@ public class Hud {
 
     private Texture toolbarTex;
     private Texture selectTex;
+    
+    private Texture bagTex;
+    private boolean bagVisible = false;
 
     private BitmapFont countFont;
     private final GlyphLayout layout = new GlyphLayout();
@@ -41,6 +44,15 @@ public class Hud {
             32         // item 尺寸
     );
 
+    private final ToolbarLayout bagLayout = new ToolbarLayout(
+        402, 82,     // 背包整体尺寸
+        1, 0,        // innerX / innerY（和 toolbar 一样）
+        391, 80,     // 内部区域
+        10,          // 20 格
+        40,          // slot 间距
+        32           // 物品尺寸
+    );
+
     public Hud(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -53,16 +65,18 @@ public class Hud {
 
         toolbarTex = new Texture("ui/toolbar.png");
         selectTex  = new Texture("ui/slot_select.png");
+        bagTex = new Texture("ui/bagbar.png");
 
         // ⭐ 像素风必须：禁用线性采样
         toolbarTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         selectTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        bagTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
     }
 
     // =====================================================
     // Render
     // =====================================================
-    public void render(SpriteBatch batch, Player player) {
+    public void render(SpriteBatch batch, Player player, boolean bagVisible) {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -77,6 +91,9 @@ public class Hud {
         batch.draw(toolbarTex, toolbarX, toolbarY, toolbarW, toolbarH);
 
         drawHotbar(batch, player, toolbarX, toolbarY);
+        if (bagVisible) {
+            drawBag(batch, player);
+        }
 
         batch.end();
     }
@@ -148,6 +165,72 @@ public class Hud {
         }
     }
 
+    private void drawBag(SpriteBatch batch, Player player) {
+
+        if (player == null) return;
+        Bag bag = player.Getbag();
+        if (bag == null) return;
+            float scale = UI_SCALE;
+        float bagW = bagTex.getWidth() * scale;
+        float bagH = bagTex.getHeight() * scale;
+
+        // 居中
+        float bagX = snap((screenWidth - bagW) / 2f);
+        float bagY = snap((screenHeight - bagH) / 2f);
+
+        batch.draw(bagTex, bagX, bagY, bagW, bagH);
+        // ===== 内部区域 =====
+        int cols = 10;
+        int rows = 2;
+
+        float innerX = snap(bagX + bagLayout.innerX * scale);
+
+        float step = bagLayout.slotStep * scale;
+
+        float slotSize = bagLayout.slotSize * scale;
+        float slotHeight = slotSize;
+        float gridHeight = (rows - 1) * step + slotHeight;
+        float innerY = snap(bagY + (bagH - gridHeight) / 2f);
+
+        float itemOffset =
+                (bagLayout.slotStep - bagLayout.slotSize) / 2f * scale;
+        
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+
+                int index = row * cols + col;
+
+                float slotX = snap(innerX + col * step);
+                float slotY = snap(innerY + (rows - 1 - row) * step);
+
+                float itemX = snap(slotX + itemOffset);
+                float itemY = snap(slotY + (slotHeight - slotSize) / 2f);
+
+                Itemstack stack = bag.get(index);
+                if (stack == null || stack.Isempty()) continue;
+                if (stack.Item == null || stack.Item.Icon == null) continue;
+
+                batch.draw(stack.Item.Icon, itemX, itemY, slotSize, slotSize);
+
+                if (stack.Amount > 1) {
+                    String txt = String.valueOf(stack.Amount);
+                    layout.setText(countFont, txt);
+
+                    float textX = snap(itemX + slotSize - COUNT_PAD_PX * scale - layout.width);
+                    float textY = snap(itemY + COUNT_PAD_PX * scale + layout.height);
+
+                    countFont.draw(batch, layout, textX, textY);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
     // =====================================================
     // 像素对齐（核心工具）
     // =====================================================
@@ -165,5 +248,6 @@ public class Hud {
         countFont.dispose();
         toolbarTex.dispose();
         selectTex.dispose();
+        bagTex.dispose();
     }
 }
