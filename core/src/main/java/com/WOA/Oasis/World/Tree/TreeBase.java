@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.WOA.Oasis.Inventory.Item;
-import com.WOA.Oasis.World.Drop.DropItem;
-import com.WOA.Oasis.Inventory.Item;
 import com.WOA.Oasis.Inventory.Items.Axeitem;
 import com.WOA.Oasis.Inventory.Items.Pickitem;
+import com.WOA.Oasis.World.Drop.DropType;
+
 
 public abstract class TreeBase {
 
@@ -91,6 +91,9 @@ public abstract class TreeBase {
     // ⭐ 采摘
     public void harvest() {
         if (state != State.ADULT) return;
+        
+        Dropresult drop = getDrop(DropType.HARVEST);
+        spawnDrop(drop);
 
         state = State.HARVESTED;
         System.out.println(getHarvestMessage());
@@ -98,8 +101,7 @@ public abstract class TreeBase {
 
     // ⭐ 砍树
     public void chopOnce() {
-        if (state == State.STUMP) return;
-        if (state == State.SAPLING) return;
+        if (state == State.STUMP || state == State.SAPLING) return;
 
         hp--;
         System.out.println(getChopMessage() + " HP 剩余：" + hp);
@@ -131,9 +133,8 @@ public abstract class TreeBase {
     }
 
     // 树的掉落物品
-    public abstract Dropresult getHarvestdrop();
 
-    public abstract Dropresult getChopDrop();
+    public abstract Dropresult getDrop(DropType type);
 
     public float getX() {
         return x;
@@ -144,20 +145,23 @@ public abstract class TreeBase {
     }
 
     protected void onChopped() {
-        Dropresult drop = getChopDrop();
-        if (drop == null) return;
-        for (int i = 0; i < drop.amount; i++) {
-
-        DropItem item = new DropItem(
-            
-            x + MathUtils.random(-6, 6),
-            y + MathUtils.random(-6, 6),
-            drop.item,
-            1
-        );
-
-        WorldDropManager.getInstance().Spawn(item);
-        }
+        Dropresult drop = getDrop(DropType.CHOP);
+        spawnDrop(drop);
         state = State.STUMP;
     }
+
+    protected void spawnDrop(Dropresult drop) {
+    if (drop == null) return;
+
+        for (int i = 0; i < drop.amount; i++) {
+            DropItem item = new DropItem(
+                x + MathUtils.random(-15, 15),
+                y + MathUtils.random(-15, 15),
+                drop.item,
+                1
+            );
+            WorldDropManager.getInstance().Spawn(item);
+        }
+    }
+
 }

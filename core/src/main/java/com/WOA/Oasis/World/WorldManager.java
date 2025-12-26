@@ -79,12 +79,6 @@ public class WorldManager {
     public void handleHarvest(Player player) {
         for (TreeBase tree : trees) {
             if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
-                Dropresult drop = tree.getHarvestdrop();
-                if (drop != null) {
-                    dropManager.Spawn(new DropItem(
-                        tree.getX(), tree.getY(), drop.item, drop.amount
-                    ));
-                }
                 tree.harvest();
                 break;
             }

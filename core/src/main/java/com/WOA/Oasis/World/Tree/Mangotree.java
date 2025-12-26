@@ -2,6 +2,7 @@ package com.WOA.Oasis.World.Tree;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.World.Drop.DropType;
 import com.WOA.Oasis.World.Drop.Dropresult;
 
 public class Mangotree extends TreeBase {
@@ -23,20 +24,13 @@ public class Mangotree extends TreeBase {
     @Override protected String getHarvestMessage() {
         return "🥭 芒果已采摘！";
     }
-    @Override 
-    public Dropresult getHarvestdrop() {
-    return new Dropresult(
-        Itemregistry.Mango,
-        1
-    );
-    }
-    
+
     @Override
-    public Dropresult getChopDrop() {
-        return new Dropresult(
-            Itemregistry.Wood,
-            3
-        );
+    public Dropresult getDrop(DropType type) {
+        return switch (type) {
+            case HARVEST -> new Dropresult(Itemregistry.Mango, 2);
+            case CHOP    -> new Dropresult(Itemregistry.Wood, 3);
+        };
     }
 
     @Override protected String getChopMessage() {

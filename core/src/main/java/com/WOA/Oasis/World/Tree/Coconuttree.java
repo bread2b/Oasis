@@ -1,6 +1,7 @@
 package com.WOA.Oasis.World.Tree;
 
 import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.World.Drop.DropType;
 import com.WOA.Oasis.World.Drop.Dropresult;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -23,20 +24,15 @@ public class Coconuttree extends TreeBase {
     @Override protected String getHarvestMessage() {
         return "🥥 椰子已采摘！";
     }
-    @Override 
-    public Dropresult getHarvestdrop() {
-        return new Dropresult(
-            Itemregistry.Coconut,
-            1
-        );
-    }
+
     @Override
-    public Dropresult getChopDrop() {
-        return new Dropresult(
-            Itemregistry.Wood,
-            300
-        );
+    public Dropresult getDrop(DropType type) {
+        return switch (type) {
+            case HARVEST -> new Dropresult(Itemregistry.Coconut, 2);
+            case CHOP    -> new Dropresult(Itemregistry.Wood, 3);
+        };
     }
+
     @Override protected String getChopMessage() {
         return "🪓 砍椰子树";
     }
