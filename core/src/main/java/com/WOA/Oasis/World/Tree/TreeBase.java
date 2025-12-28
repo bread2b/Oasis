@@ -51,7 +51,7 @@ public abstract class TreeBase {
         System.out.println("🌳 Tree created: state=" + state + ", hp=" + hp);
         // 可砍状态统一 5 HP
         if (state == State.ADULT || state == State.HARVESTED) {
-            this.hp = 5;
+            this.hp = 3;
         } else {
             this.hp = 1;
         }
