@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.WOA.Oasis.Player;
+import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.Inventory.Bag;
 import com.WOA.Oasis.Inventory.Itemstack;
 
@@ -25,6 +26,9 @@ public class Hud {
 
     private int screenWidth;
     private int screenHeight;
+
+    private Texture goldIcon;
+
 
     // =========================
     // UI 全局参数
@@ -66,11 +70,14 @@ public class Hud {
         toolbarTex = new Texture("ui/toolbar.png");
         selectTex  = new Texture("ui/slot_select.png");
         bagTex = new Texture("ui/bagbar.png");
+        goldIcon = new Texture("items/goldcoin.png");
+
 
         // ⭐ 像素风必须：禁用线性采样
         toolbarTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         selectTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         bagTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        goldIcon.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
     }
 
     // =====================================================
@@ -94,6 +101,8 @@ public class Hud {
         if (bagVisible) {
             drawBag(batch, player);
         }
+        drawCurrency(batch, player);
+        drawDebugInfo(batch, player);
 
         batch.end();
     }
@@ -226,7 +235,43 @@ public class Hud {
     }
 
 
+    private void drawCurrency(SpriteBatch batch, Player player) {
+        if (player == null) return;
 
+        int gold = player.Getwallet().get(CurrencyType.GOLD);
+
+        float scale = UI_SCALE;
+
+        // 左上角位置
+        float x = snap(10f * scale);
+        float y = snap(screenHeight - 10f * scale);
+
+        float iconSize = 16f * scale;
+
+        // 画金币图标
+        batch.draw(goldIcon, x, y - iconSize, iconSize, iconSize);
+
+        // 画数量
+        String text = String.valueOf(gold);
+        layout.setText(countFont, text);
+
+        float textX = x + iconSize + 4 * scale;
+        float textY = y - iconSize / 2f + layout.height / 2f;
+
+        countFont.draw(batch, layout, textX, textY);
+}
+
+    private void drawDebugInfo(SpriteBatch batch, Player player) {
+    if (player == null) return;
+
+    float x = 10f;
+    float y = 60f;
+
+    String posText = "X: " + player.getX() + "  Y: " + player.getY();
+
+    layout.setText(countFont, posText);
+    countFont.draw(batch, layout, x, y);
+}
 
 
 

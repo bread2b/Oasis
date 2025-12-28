@@ -101,6 +101,14 @@ public class GameScreen implements Screen {
             world.handleHarvest(player);
         }
 
+        // 测试：按 G 生成金币
+if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+    world.spawnTestGold(
+        player.getX() + player.getWidth() / 2f,
+        player.getY() + player.getHeight() / 2f
+    );
+}
+
         // 真·全屏切换
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
                 && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {

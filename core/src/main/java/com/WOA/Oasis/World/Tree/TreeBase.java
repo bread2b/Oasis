@@ -1,15 +1,18 @@
 package com.WOA.Oasis.World.Tree;
 
+import com.WOA.Oasis.World.Drop.DropCurrency;
 import com.WOA.Oasis.World.Drop.DropItem;
 import com.WOA.Oasis.World.Drop.Dropresult;
 import com.WOA.Oasis.World.Drop.WorldDropManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.Inventory.Item;
 import com.WOA.Oasis.Inventory.Items.Axeitem;
 import com.WOA.Oasis.Inventory.Items.Pickitem;
 import com.WOA.Oasis.World.Drop.DropType;
+import com.badlogic.gdx.utils.Array;
 
 
 public abstract class TreeBase {
@@ -35,6 +38,10 @@ public abstract class TreeBase {
     // ⭐ 子类可自定义文案
     protected abstract String getHarvestMessage();
     protected abstract String getChopMessage();
+
+    // 多掉落系统（支持金币 + 物品）
+    public abstract Array<Dropresult> getDrops(DropType type);
+
 
     protected TreeBase(float x, float y, State state) {
         this.x = x;
@@ -91,10 +98,8 @@ public abstract class TreeBase {
     // ⭐ 采摘
     public void harvest() {
         if (state != State.ADULT) return;
-        
-        Dropresult drop = getDrop(DropType.HARVEST);
-        spawnDrop(drop);
 
+        spawnDrops(DropType.HARVEST);
         state = State.HARVESTED;
         System.out.println(getHarvestMessage());
     }
@@ -107,7 +112,8 @@ public abstract class TreeBase {
         System.out.println(getChopMessage() + " HP 剩余：" + hp);
 
         if (hp <= 0) {
-            onChopped();
+            spawnDrops(DropType.CHOP);
+            state = State.STUMP;
             System.out.println("🌴 树被砍倒！");
         }
     }
@@ -132,10 +138,6 @@ public abstract class TreeBase {
         return state == State.STUMP;
     }
 
-    // 树的掉落物品
-
-    public abstract Dropresult getDrop(DropType type);
-
     public float getX() {
         return x;
     }
@@ -144,24 +146,32 @@ public abstract class TreeBase {
         return y;
     }
 
-    protected void onChopped() {
-        Dropresult drop = getDrop(DropType.CHOP);
-        spawnDrop(drop);
-        state = State.STUMP;
-    }
+    protected void spawnDrops(DropType type) {
 
-    protected void spawnDrop(Dropresult drop) {
-    if (drop == null) return;
+    Array<Dropresult> drops = getDrops(type);
+    if (drops == null) return;
+
+    for (Dropresult drop : drops) {
 
         for (int i = 0; i < drop.amount; i++) {
-            DropItem item = new DropItem(
-                x + MathUtils.random(-15, 15),
-                y + MathUtils.random(-15, 15),
-                drop.item,
-                1
-            );
-            WorldDropManager.getInstance().Spawn(item);
+
+            float dx = MathUtils.random(-15, 15);
+            float dy = MathUtils.random(-15, 15);
+
+            if (drop.type == DropType.GOLD) {
+                WorldDropManager.getInstance().Spawn(
+                    new DropCurrency(x + dx, y + dy, CurrencyType.GOLD, 1)
+                );
+            } else {
+                WorldDropManager.getInstance().Spawn(
+                    new DropItem(x + dx, y + dy, drop.item, 1)
+                );
+            }
         }
     }
+}
+
+
+
 
 }

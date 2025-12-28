@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import com.WOA.Oasis.Inventory.Bag;
+import com.WOA.Oasis.Economy.Wallet;
+import com.WOA.Oasis.Economy.CurrencyType;
+
 
 public class Player {
 
@@ -27,6 +30,7 @@ public class Player {
     private TextureRegion idleFrame;
     private TextureRegion currentFrame;
     private Bag bag;
+    private Wallet wallet;
 
     public Player(int x, int y, int width, int height) {
         this.x = x;
@@ -35,6 +39,7 @@ public class Player {
         this.height = height;
 
         bag = new Bag();
+        wallet = new Wallet();
 
         Texture idleTex = new Texture(Gdx.files.internal("textures/mainplayer.png"));
         idleTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -100,7 +105,9 @@ public class Player {
     public Bag Getbag() {
         return bag;
     }
-
+    public Wallet Getwallet() {
+        return wallet;
+    }
     // ===== 拾取系统用 =====
 
     // 玩家中心 X（像素）

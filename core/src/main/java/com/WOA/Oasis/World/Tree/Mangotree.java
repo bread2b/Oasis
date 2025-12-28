@@ -1,9 +1,11 @@
 package com.WOA.Oasis.World.Tree;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.WOA.Oasis.Inventory.Itemregistry;
 import com.WOA.Oasis.World.Drop.DropType;
 import com.WOA.Oasis.World.Drop.Dropresult;
+import com.badlogic.gdx.utils.Array;
 
 public class Mangotree extends TreeBase {
 
@@ -26,12 +28,28 @@ public class Mangotree extends TreeBase {
     }
 
     @Override
-    public Dropresult getDrop(DropType type) {
-        return switch (type) {
-            case HARVEST -> new Dropresult(Itemregistry.Mango, 2);
-            case CHOP    -> new Dropresult(Itemregistry.Wood, 3);
-        };
+    public Array<Dropresult> getDrops(DropType type) {
+
+        Array<Dropresult> drops = new Array<>();
+
+        if (type == DropType.HARVEST) {
+            // 掉芒果
+            drops.add(new Dropresult(DropType.HARVEST, Itemregistry.Mango, 2));
+        }
+
+        if (type == DropType.CHOP) {
+            // 掉木头
+            drops.add(new Dropresult(DropType.CHOP, Itemregistry.Wood, 3));
+
+            // 30% 概率掉金币
+            if (MathUtils.randomBoolean(0.3f)) {
+                drops.add(new Dropresult(DropType.GOLD, null, 1));
+            }
+        }
+
+        return drops;
     }
+
 
     @Override protected String getChopMessage() {
         return "🪓 砍芒果树";

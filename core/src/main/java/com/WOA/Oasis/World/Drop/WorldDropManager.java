@@ -38,41 +38,55 @@ public class WorldDropManager {
 
     for (int i = drops.size - 1; i >= 0; i--) {
 
-        DropItem drop = drops.get(i);
+    DropItem drop = drops.get(i);
 
-        // 累计存活时间（掉落保护）
-        drop.Update(delta);
-        if (drop.AliveTime < 0.3f) continue;
-        boolean canPickup = player.Getbag().CanAdd(drop.Item, drop.Amount);
+    // 生存时间
+    drop.Update(delta);
+    if (drop.AliveTime < 0.3f) continue;
 
-        float dropCx = drop.Position.x + DropItem.SIZE / 2f;
-        float dropCy = drop.Position.y + DropItem.SIZE / 2f;
+    float dropCx = drop.Position.x + DropItem.SIZE / 2f;
+    float dropCy = drop.Position.y + DropItem.SIZE / 2f;
 
-        float dx = player.getCenterX() - dropCx;
-        float dy = player.getCenterY() - dropCy;
-        float dist2 = dx * dx + dy * dy;
+    float dx = player.getCenterX() - dropCx;
+    float dy = player.getCenterY() - dropCy;
+    float dist2 = dx * dx + dy * dy;
 
-        // ⭐ 进入吸附半径 → 开始吸附
-        if (canPickup && dist2 <= ATTRACT_RADIUS2) {
-            drop.IsAttracting = true;
+    // ========== 吸附判定 ==========
+    boolean canPickup;
+    if (drop instanceof DropCurrency) {
+        canPickup = true;
+    } else {
+        canPickup = player.Getbag().CanAdd(drop.Item, drop.Amount);
+    }
+
+    if (canPickup && dist2 <= ATTRACT_RADIUS2) {
+        drop.IsAttracting = true;
+    }
+
+    if (drop.IsAttracting) {
+        drop.AttractTo(
+            player.getCenterX() - DropItem.SIZE / 2f,
+            player.getCenterY() - DropItem.SIZE / 2f,
+            ATTRACT_SPEED
+        );
+    }
+
+    // ========== 真正拾取 ==========
+    if (dist2 <= PICK_DISTANCE2) {
+
+        if (drop instanceof DropCurrency) {
+            drop.onPickup(player);
+            drops.removeIndex(i);
+            continue;
         }
 
-        // ⭐ 吸附中：向玩家移动
-        if (drop.IsAttracting && canPickup) {
-            drop.AttractTo(
-                player.getCenterX() - DropItem.SIZE / 2f,
-                player.getCenterY() - DropItem.SIZE / 2f,
-                ATTRACT_SPEED
-            );
-        }
-
-        // ⭐ 足够近 → 真正拾取
-        if (canPickup && dist2 <= PICK_DISTANCE2) {
-            if (player.Getbag().Additem(drop.Item, drop.Amount)) {
-                drops.removeIndex(i);
-            }
+        // 普通物品
+        if (player.Getbag().Additem(drop.Item, drop.Amount)) {
+            drops.removeIndex(i);
         }
     }
+}
+
 }
 
     // 渲染掉落物

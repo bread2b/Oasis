@@ -8,10 +8,12 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 
 import com.WOA.Oasis.Player;
+import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.Coconuttree;
 import com.WOA.Oasis.World.Drop.WorldDropManager;
+import com.WOA.Oasis.World.Drop.DropCurrency;
 import com.WOA.Oasis.World.Drop.DropItem;
 import com.WOA.Oasis.World.Drop.Dropresult;
 
@@ -88,4 +90,9 @@ public class WorldManager {
     public OrthogonalTiledMapRenderer getRenderer() {
         return mapRenderer;
     }
+
+    public void spawnTestGold(float x, float y) {
+        dropManager.Spawn(new DropCurrency(x, y, CurrencyType.GOLD, 10));
+    }
+
 }

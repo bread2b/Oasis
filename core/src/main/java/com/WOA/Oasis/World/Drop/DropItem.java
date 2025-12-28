@@ -2,6 +2,7 @@ package com.WOA.Oasis.World.Drop;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.WOA.Oasis.Player;
 import com.WOA.Oasis.Inventory.Item;
 
 /**
@@ -39,6 +40,10 @@ public class DropItem {
 
     public void Render(SpriteBatch batch) {
         batch.draw(Item.Icon, Position.x, Position.y, SIZE, SIZE);
+    }
+
+    public void onPickup(Player player) {
+        // 默认什么也不做
     }
 
 }
