@@ -29,6 +29,12 @@ public class Hud {
 
     private Texture goldIcon;
 
+    // ===== Health UI =====
+    private Texture heartFull;
+    private Texture heartHalf;
+    private Texture heartEmpty;
+
+
 
     // =========================
     // UI 全局参数
@@ -71,6 +77,9 @@ public class Hud {
         selectTex  = new Texture("ui/slot_select.png");
         bagTex = new Texture("ui/bagbar.png");
         goldIcon = new Texture("items/goldcoin.png");
+        heartFull = new Texture("ui/heart_full.png");
+        heartHalf = new Texture("ui/heart_half.png");
+        heartEmpty = new Texture("ui/heart_empty.png");
 
 
         // ⭐ 像素风必须：禁用线性采样
@@ -78,6 +87,9 @@ public class Hud {
         selectTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         bagTex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         goldIcon.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        heartFull.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        heartHalf.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+        heartEmpty.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
     }
 
     // =====================================================
@@ -102,6 +114,7 @@ public class Hud {
             drawBag(batch, player);
         }
         drawCurrency(batch, player);
+        drawHealthBar(batch, player);
         drawDebugInfo(batch, player);
 
         batch.end();
@@ -241,12 +254,11 @@ public class Hud {
         int gold = player.Getwallet().get(CurrencyType.GOLD);
 
         float scale = UI_SCALE;
-
-        // 左上角位置
-        float x = snap(10f * scale);
-        float y = snap(screenHeight - 10f * scale);
-
+        
         float iconSize = 16f * scale;
+        // 左上角位置
+        float x = snap(screenWidth - iconSize - 10f * scale - 40f * scale);
+        float y = snap(screenHeight - 10f * scale);
 
         // 画金币图标
         batch.draw(goldIcon, x, y - iconSize, iconSize, iconSize);
@@ -259,7 +271,7 @@ public class Hud {
         float textY = y - iconSize / 2f + layout.height / 2f;
 
         countFont.draw(batch, layout, textX, textY);
-}
+    }
 
     private void drawDebugInfo(SpriteBatch batch, Player player) {
     if (player == null) return;
@@ -274,6 +286,43 @@ public class Hud {
 }
 
 
+    private void drawHealthBar(SpriteBatch batch, Player player) {
+        if (player == null || player.getHealth() == null) return;
+
+        int max = player.getHealth().getMax();
+        int cur = player.getHealth().getCurrent();
+
+        float scale = UI_SCALE;
+
+        int heartSize = 16;
+        int spacing = 2;
+
+        int heartCount = (int) Math.ceil(max / 2f);
+
+        // 放在左上角，金币下面
+        float x = snap(10f * scale);
+        float y = snap(screenHeight - 10f * scale);
+
+        for (int i = 0; i < heartCount; i++) {
+            int value = (i + 1) * 2;
+
+            Texture tex;
+            if (cur >= value)
+                tex = heartFull;
+            else if (cur == value - 1)
+                tex = heartHalf;
+            else
+                tex = heartEmpty;
+
+            batch.draw(
+            tex,
+            x + i * (heartSize + spacing) * scale,
+            y - heartSize * scale,
+            heartSize * scale,
+            heartSize * scale
+        );
+        }
+}
 
 
     // =====================================================
@@ -294,5 +343,9 @@ public class Hud {
         toolbarTex.dispose();
         selectTex.dispose();
         bagTex.dispose();
+        heartFull.dispose();
+        heartHalf.dispose();
+        heartEmpty.dispose();
+
     }
 }
