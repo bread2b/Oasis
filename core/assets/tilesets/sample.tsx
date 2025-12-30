@@ -2,14 +2,11 @@
 <tileset version="1.10" tiledversion="1.11.2" name="sample" tilewidth="16" tileheight="16" tilecount="1728" columns="48">
  <image source="sample.png" width="768" height="576"/>
  <wangsets>
-  <wangset name="watergrass" type="mixed" tile="-1">
-   <wangcolor name="water" color="#ff0000" tile="-1" probability="1"/>
-   <wangcolor name="grass" color="#00ff00" tile="-1" probability="1"/>
-  </wangset>
   <wangset name="shore" type="corner" tile="-1">
    <wangcolor name="grass" color="#ff0000" tile="-1" probability="1"/>
    <wangtile tileid="15" wangid="0,1,0,1,0,1,0,0"/>
    <wangtile tileid="17" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="58" wangid="0,0,0,0,0,1,0,0"/>
    <wangtile tileid="64" wangid="0,1,0,1,0,1,0,1"/>
    <wangtile tileid="111" wangid="0,1,0,1,0,0,0,1"/>
    <wangtile tileid="113" wangid="0,1,0,0,0,1,0,1"/>
@@ -33,6 +30,7 @@
    <wangtile tileid="399" wangid="0,1,0,0,0,0,0,1"/>
    <wangtile tileid="400" wangid="0,1,0,0,0,0,0,1"/>
    <wangtile tileid="401" wangid="0,0,0,0,0,0,0,1"/>
+   <wangtile tileid="535" wangid="0,0,0,1,0,0,0,0"/>
   </wangset>
  </wangsets>
 </tileset>

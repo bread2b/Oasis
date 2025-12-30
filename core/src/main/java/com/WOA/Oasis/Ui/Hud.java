@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.WOA.Oasis.Player;
 import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.Inventory.Bag;
-import com.WOA.Oasis.Inventory.Itemstack;
+import com.WOA.Oasis.Inventory.ItemStack;
 
 public class Hud {
 
@@ -168,7 +168,7 @@ public class Hud {
             }
 
             // ===== item =====
-            Itemstack stack = bag.get(i);
+            ItemStack stack = bag.get(i);
             if (stack == null || stack.Isempty()) continue;
             if (stack.Item == null || stack.Item.Icon == null) continue;
 
@@ -228,7 +228,7 @@ public class Hud {
                 float itemX = snap(slotX + itemOffset);
                 float itemY = snap(slotY + (slotHeight - slotSize) / 2f);
 
-                Itemstack stack = bag.get(index);
+                ItemStack stack = bag.get(index);
                 if (stack == null || stack.Isempty()) continue;
                 if (stack.Item == null || stack.Item.Icon == null) continue;
 

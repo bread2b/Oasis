@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import com.WOA.Oasis.Ui.Hud;
 import com.WOA.Oasis.World.WorldManager;
-import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.Inventory.ItemRegistry;
 
 public class GameScreen implements Screen {
 
@@ -48,9 +48,9 @@ public class GameScreen implements Screen {
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // 初始物品
-        player.Getbag().Additem(Itemregistry.Axe, 1);
-        player.Getbag().Additem(Itemregistry.Pick, 1);
-        player.Getbag().Additem(Itemregistry.Wood, 20);
+        player.Getbag().Additem(ItemRegistry.Axe, 1);
+        player.Getbag().Additem(ItemRegistry.Pick, 1);
+        player.Getbag().Additem(ItemRegistry.Wood, 20);
     }
 
     @Override
@@ -117,6 +117,10 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
             player.getHealth().heal(1);     // 回 1 点血
         }
+        // crop harvest
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            world.handleCropHarvest(player);
+    }
 
         // 真·全屏切换
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)

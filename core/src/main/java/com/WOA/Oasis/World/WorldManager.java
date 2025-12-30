@@ -13,6 +13,9 @@ import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.Coconuttree;
 import com.WOA.Oasis.World.Drop.WorldDropManager;
+import com.WOA.Oasis.World.Crop.CornCrop;
+import com.WOA.Oasis.World.Crop.Crop;
+import com.WOA.Oasis.World.Crop.CropManager;
 import com.WOA.Oasis.World.Drop.DropCurrency;
 import com.WOA.Oasis.World.Drop.DropItem;
 import com.WOA.Oasis.World.Drop.Dropresult;
@@ -25,6 +28,8 @@ public class WorldManager {
 
     private Array<TreeBase> trees = new Array<>();
     private WorldDropManager dropManager;
+    private CropManager cropManager;
+
 
     public WorldManager(TiledMap map) {
         this.map = map;
@@ -32,6 +37,7 @@ public class WorldManager {
         this.dropManager = WorldDropManager.getInstance();
 
         loadTreesFromTiled();
+        loadCropsFromTiled();  
     }
 
     private void loadTreesFromTiled() {
@@ -53,8 +59,29 @@ public class WorldManager {
         }
     }
 
+    private void loadCropsFromTiled() {
+    cropManager = new CropManager();
+
+    MapLayer layer = map.getLayers().get("crops");
+    if (layer == null) return;
+
+        for (MapObject obj : layer.getObjects()) {
+            float x = obj.getProperties().get("x", Float.class);
+            float y = obj.getProperties().get("y", Float.class);
+
+            int stage = 0;
+            if (obj.getProperties().containsKey("stage")) {
+                stage = obj.getProperties().get("stage", Integer.class);
+            }
+            cropManager.addCrop(new CornCrop(x, y, stage));
+
+            
+        }
+    }
+
     public void update(float delta, Player player) {
         dropManager.Update(player, delta);
+        cropManager.update(delta);
     }
 
     public void render(SpriteBatch batch) {
@@ -64,6 +91,7 @@ public class WorldManager {
             tree.render(batch);
         }
 
+        cropManager.render(batch);
         dropManager.Render(batch);
     }
 
@@ -85,6 +113,10 @@ public class WorldManager {
                 break;
             }
         }
+    }
+
+    public void handleCropHarvest(Player player) {
+        cropManager.tryHarvest(player.getX(), player.getY());
     }
 
     public OrthogonalTiledMapRenderer getRenderer() {

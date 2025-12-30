@@ -2,7 +2,7 @@ package com.WOA.Oasis.World.Tree;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.WOA.Oasis.Inventory.Itemregistry;
+import com.WOA.Oasis.Inventory.ItemRegistry;
 import com.WOA.Oasis.World.Drop.DropType;
 import com.WOA.Oasis.World.Drop.Dropresult;
 import com.badlogic.gdx.utils.Array;
@@ -34,12 +34,12 @@ public class Mangotree extends TreeBase {
 
         if (type == DropType.HARVEST) {
             // 掉芒果
-            drops.add(new Dropresult(DropType.HARVEST, Itemregistry.Mango, 2));
+            drops.add(new Dropresult(DropType.HARVEST, ItemRegistry.Mango, 2));
         }
 
         if (type == DropType.CHOP) {
             // 掉木头
-            drops.add(new Dropresult(DropType.CHOP, Itemregistry.Wood, 3));
+            drops.add(new Dropresult(DropType.CHOP, ItemRegistry.Wood, 3));
 
             // 30% 概率掉金币
             if (MathUtils.randomBoolean(0.3f)) {

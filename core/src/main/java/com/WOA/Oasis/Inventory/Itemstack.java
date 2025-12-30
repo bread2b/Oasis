@@ -1,17 +1,17 @@
 package com.WOA.Oasis.Inventory;
 
-public class Itemstack {
+public class ItemStack {
 
     public Item Item;
     public int Amount;
 
     // 空 stack
-    public Itemstack() {
+    public ItemStack() {
         Clear();
     }
 
     // 常用构造
-    public Itemstack(Item item, int amount) {
+    public ItemStack(Item item, int amount) {
         Set(item, amount);
     }
 

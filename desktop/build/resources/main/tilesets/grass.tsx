@@ -35,5 +35,31 @@
    <wangtile tileid="671" wangid="0,1,0,0,0,0,0,1"/>
    <wangtile tileid="672" wangid="0,0,0,0,0,0,0,1"/>
   </wangset>
+  <wangset name="road" type="corner" tile="-1">
+   <wangcolor name="road" color="#ff0000" tile="-1" probability="1"/>
+   <wangtile tileid="259" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="260" wangid="0,0,0,1,0,1,0,0"/>
+   <wangtile tileid="261" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="262" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="263" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="264" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="265" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="290" wangid="0,1,0,1,0,0,0,0"/>
+   <wangtile tileid="291" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="292" wangid="0,0,0,0,0,1,0,1"/>
+   <wangtile tileid="293" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="294" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="295" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="296" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="321" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="322" wangid="0,1,0,0,0,0,0,1"/>
+   <wangtile tileid="323" wangid="0,0,0,0,0,0,0,1"/>
+   <wangtile tileid="326" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="327" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="355" wangid="0,0,0,1,0,0,0,1"/>
+   <wangtile tileid="356" wangid="0,1,0,0,0,1,0,0"/>
+   <wangtile tileid="357" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="358" wangid="0,0,0,0,0,0,0,1"/>
+  </wangset>
  </wangsets>
 </tileset>

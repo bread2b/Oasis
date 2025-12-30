@@ -5,27 +5,27 @@ public class Bag {
     public static final int TOTAL_SLOTS = 20;
     public static final int HOTBAR_SLOTS = 8;
 
-    private final Itemstack[] slots;
+    private final ItemStack[] slots;
     private int selectedHotbarIndex = 0;
 
     public Bag() {
-        slots = new Itemstack[TOTAL_SLOTS];
+        slots = new ItemStack[TOTAL_SLOTS];
         for (int i = 0; i < TOTAL_SLOTS; i++) {
-            slots[i] = new Itemstack();
+            slots[i] = new ItemStack();
         }
     }
 
-    public Itemstack get(int index) {
+    public ItemStack get(int index) {
         if (index < 0 || index >= TOTAL_SLOTS) return null;
         return slots[index];
     }
 
-    public Itemstack getSelected() {
+    public ItemStack getSelected() {
         return slots[selectedHotbarIndex];
     }
 
     public Item getSelectedItem() {
-        Itemstack stack = getSelected();
+        ItemStack stack = getSelected();
         return (stack == null || stack.Isempty()) ? null : stack.Item;
     }
 
@@ -51,7 +51,7 @@ public class Bag {
 
         // 1️⃣ 先尝试堆叠
         for (int i = 0; i < TOTAL_SLOTS && remain > 0; i++) {
-            Itemstack stack = slots[i];
+            ItemStack stack = slots[i];
             if (stack.Canstack(item)) {
                 remain = stack.Addamount(remain);
             }
@@ -59,7 +59,7 @@ public class Bag {
 
         // 2️⃣ 再放入空位
         for (int i = 0; i < TOTAL_SLOTS && remain > 0; i++) {
-            Itemstack stack = slots[i];
+            ItemStack stack = slots[i];
             if (stack.Isempty()) {
                 int add = Math.min(item.Maxstack, remain);
                 stack.Set(item, add);
@@ -76,7 +76,7 @@ public class Bag {
 
     int remain = amount;
 
-    for (Itemstack stack : slots) {
+    for (ItemStack stack : slots) {
 
         // 空格子 → 一定能放
         if (stack.Isempty()) {
