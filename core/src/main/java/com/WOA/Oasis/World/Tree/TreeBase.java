@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.Inventory.Item;
-import com.WOA.Oasis.Inventory.Items.Axeitem;
-import com.WOA.Oasis.Inventory.Items.Pickitem;
+import com.WOA.Oasis.Inventory.Items.tool.Axeitem;
+import com.WOA.Oasis.Inventory.Items.tool.Pickitem;
 import com.WOA.Oasis.World.Drop.DropType;
 import com.badlogic.gdx.utils.Array;
 
