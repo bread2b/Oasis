@@ -35,7 +35,7 @@ public abstract class Crop {
 
     // ⭐ 关键：渲染用 Y（让 16x32 的作物贴地）
     protected float getRenderY() {
-        return y - (CROP_HEIGHT - TILE_SIZE);
+        return y;
     }
 
     public float getX() {

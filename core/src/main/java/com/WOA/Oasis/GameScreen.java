@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -57,6 +58,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         // ========= 输入 =========
+        updateMouseTile();
         handleInput();
 
         // ========= 固定逻辑更新 =========
@@ -100,10 +102,10 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             world.handleInteract(player);
         }
-
-        // 种植
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            world.handlePlant(player);
+        
+        // ✅ 鼠标左键点击：在鼠标指向 tile 种植
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            world.tryPlantAtHover();
         }
 
 
@@ -162,4 +164,22 @@ public class GameScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() {}
     @Override public void dispose() {}
+
+    private void updateMouseTile() {
+
+    Vector3 worldPos = new Vector3(
+        Gdx.input.getX(),
+        Gdx.input.getY(),
+        0
+    );
+
+    viewport.unproject(worldPos); // ✅ 关键修复点
+
+    float tileX = ((int)(worldPos.x  / 16)) * 16;
+    float tileY = ((int)(worldPos.y  / 16)) * 16;
+
+    world.updateHoverTile(tileX, tileY, player);
+}
+
+
 }

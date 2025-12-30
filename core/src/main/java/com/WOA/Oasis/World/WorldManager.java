@@ -34,15 +34,25 @@ public class WorldManager {
     private WorldDropManager dropManager;
     private CropManager cropManager;
 
+    // ✅ 鼠标 hover 的 tile
+private float hoverX = -1;
+private float hoverY = -1;
+private boolean hoverValid = false;
+
+// ✅ 绿色覆盖贴图（16x16）
+private com.badlogic.gdx.graphics.Texture plantOverlayTex;
+
 
     public WorldManager(TiledMap map) {
         this.map = map;
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1f);
         this.dropManager = WorldDropManager.getInstance();
+        this.cropManager = new CropManager();
 
-        loadTreesFromTiled();
-        loadCropsFromTiled();  
+        loadTreesFromTiled(); 
         loadFarmZones();
+        plantOverlayTex = new com.badlogic.gdx.graphics.Texture("ui/plant_overlay.png");
+
 
     }
 
@@ -65,25 +75,6 @@ public class WorldManager {
         }
     }
 
-    private void loadCropsFromTiled() {
-    cropManager = new CropManager();
-
-    MapLayer layer = map.getLayers().get("crops");
-    if (layer == null) return;
-
-        for (MapObject obj : layer.getObjects()) {
-            float x = obj.getProperties().get("x", Float.class);
-            float y = obj.getProperties().get("y", Float.class);
-
-            int stage = 0;
-            if (obj.getProperties().containsKey("stage")) {
-                stage = obj.getProperties().get("stage", Integer.class);
-            }
-            cropManager.addCrop(new CornCrop(x, y, stage));
-
-            
-        }
-    }
 
     private void loadFarmZones() {
         MapLayer layer = map.getLayers().get("farmzone");
@@ -110,7 +101,17 @@ public class WorldManager {
 
         cropManager.render(batch);
         dropManager.Render(batch);
+        renderPlantPreview(batch);
+
     }
+
+    private void renderPlantPreview(SpriteBatch batch) {
+    if (!hoverValid) return;
+
+    batch.setColor(0f, 1f, 0f, 0.35f);      // 半透明绿
+    batch.draw(plantOverlayTex, hoverX, hoverY, 16, 16);
+    batch.setColor(1f, 1f, 1f, 1f);         // 复原颜色
+}
 
     public void handleTreeInteraction(Player player) {
         for (int i = trees.size - 1; i >= 0; i--) {
@@ -148,14 +149,11 @@ public class WorldManager {
     }
 }
 
-    public void handlePlant(Player player) {
 
-    float tileX = ((int)(player.getX() / 16)) * 16;
-    float tileY = ((int)(player.getY() / 16)) * 16;
+public void tryPlantAtHover() {
+    if (!hoverValid) return;
 
-    if (!canPlant(tileX, tileY)) return;
-
-    cropManager.tryPlant(tileX, tileY);
+    cropManager.tryPlant(hoverX, hoverY);
 }
 
 
@@ -166,6 +164,28 @@ public class WorldManager {
         }
     }
     return false;
+}
+
+public void updateHoverTile(float tileX, float tileY, Player player) {
+
+    // 5 格半径 = 80 像素（这里用方形范围，简单稳）
+    float dx = Math.abs((player.getX()) - tileX);
+    float dy = Math.abs((player.getY()) - tileY);
+
+    if (dx > 80 || dy > 80) {
+        hoverValid = false;
+        return;
+    }
+
+    // 必须在 farmzone 内
+    if (!canPlant(tileX, tileY)) {
+        hoverValid = false;
+        return;
+    }
+
+    hoverX = tileX;
+    hoverY = tileY;
+    hoverValid = true;
 }
 
 
