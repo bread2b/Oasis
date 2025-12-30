@@ -539,7 +539,7 @@
     <property name="type" value="corn"/>
    </properties>
   </object>
-  <object id="42" gid="4888" x="1104.22" y="560.426" width="16" height="16">
+  <object id="42" gid="4888" x="1103.96" y="560.169" width="16" height="16">
    <properties>
     <property name="stage" type="int" value="0"/>
     <property name="type" value="corn"/>
@@ -588,8 +588,8 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="farm">
-  <object id="50" x="1023.36" y="511.968" width="176.465" height="80.7312">
+ <objectgroup id="10" name="farmzone">
+  <object id="50" x="1014.55" y="493.275" width="189.868" height="105.773">
    <properties>
     <property name="type" value="farm"/>
    </properties>

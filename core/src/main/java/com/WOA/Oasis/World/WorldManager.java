@@ -3,8 +3,10 @@ package com.WOA.Oasis.World;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 import com.WOA.Oasis.Player;
@@ -27,6 +29,8 @@ public class WorldManager {
     private OrthogonalTiledMapRenderer mapRenderer;
 
     private Array<TreeBase> trees = new Array<>();
+    private Array<Rectangle> farmZones = new Array<>();
+
     private WorldDropManager dropManager;
     private CropManager cropManager;
 
@@ -38,6 +42,8 @@ public class WorldManager {
 
         loadTreesFromTiled();
         loadCropsFromTiled();  
+        loadFarmZones();
+
     }
 
     private void loadTreesFromTiled() {
@@ -79,6 +85,17 @@ public class WorldManager {
         }
     }
 
+    private void loadFarmZones() {
+        MapLayer layer = map.getLayers().get("farmzone");
+        if (layer == null) return;
+
+        for (MapObject obj : layer.getObjects()) {
+            if (obj instanceof RectangleMapObject) {
+                farmZones.add(((RectangleMapObject) obj).getRectangle());
+            }
+        }
+    }
+
     public void update(float delta, Player player) {
         dropManager.Update(player, delta);
         cropManager.update(delta);
@@ -115,9 +132,42 @@ public class WorldManager {
         }
     }
 
-    public void handleCropHarvest(Player player) {
-        cropManager.tryHarvest(player.getX(), player.getY());
+    public void handleInteract(Player player) {
+
+    // 1️⃣ 先采作物
+    if (cropManager.tryHarvest(player.getX(), player.getY())) {
+        return;
     }
+
+    // 2️⃣ 再采树的果实（不是砍树）
+    for (TreeBase tree : trees) {
+        if (tree.isNear(player.getX(), player.getY()) && tree.canHarvest()) {
+            tree.harvest();
+            return;
+        }
+    }
+}
+
+    public void handlePlant(Player player) {
+
+    float tileX = ((int)(player.getX() / 16)) * 16;
+    float tileY = ((int)(player.getY() / 16)) * 16;
+
+    if (!canPlant(tileX, tileY)) return;
+
+    cropManager.tryPlant(tileX, tileY);
+}
+
+
+    public boolean canPlant(float x, float y) {
+    for (Rectangle r : farmZones) {
+        if (r.contains(x, y)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
     public OrthogonalTiledMapRenderer getRenderer() {
         return mapRenderer;

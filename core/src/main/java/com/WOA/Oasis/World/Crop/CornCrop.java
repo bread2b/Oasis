@@ -21,7 +21,7 @@ public class CornCrop extends Crop {
 
     @Override
     public void render(SpriteBatch batch) {
-        batch.draw(TEXTURES[stage], x, y);
+        batch.draw(TEXTURES[stage], x, getRenderY());
     }
 
     @Override

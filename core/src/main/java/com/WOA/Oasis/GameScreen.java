@@ -98,8 +98,14 @@ public class GameScreen implements Screen {
 
         // 采集
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            world.handleHarvest(player);
+            world.handleInteract(player);
         }
+
+        // 种植
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            world.handlePlant(player);
+        }
+
 
         // 测试：按 G 生成金币
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
@@ -117,10 +123,6 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
             player.getHealth().heal(1);     // 回 1 点血
         }
-        // crop harvest
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            world.handleCropHarvest(player);
-    }
 
         // 真·全屏切换
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)

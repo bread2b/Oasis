@@ -33,7 +33,7 @@ public class CropManager {
         }
     }
 
-    public void tryHarvest(float x, float y) {
+    public boolean tryHarvest(float x, float y) {
         for (int i = crops.size - 1; i >= 0; i--) {
             Crop crop = crops.get(i);
             if (crop.isMature()
@@ -42,10 +42,25 @@ public class CropManager {
 
                 crop.harvest();
                 crops.removeIndex(i);
-                break;
+                return true;
             }
         }
+        return false;
     }
+
+
+    public boolean tryPlant(float x, float y) {
+
+    for (Crop crop : crops) {
+        if (Math.abs(crop.getX() - x) < 16 &&
+            Math.abs(crop.getY() - y) < 16) {
+            return false;
+        }
+    }
+
+    crops.add(new CornCrop(x, y, 0));
+    return true;
+}
 
     public Array<Crop> getCrops() {
         return crops;
