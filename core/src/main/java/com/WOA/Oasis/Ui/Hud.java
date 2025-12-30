@@ -346,6 +346,6 @@ public class Hud {
         heartFull.dispose();
         heartHalf.dispose();
         heartEmpty.dispose();
-
+        goldIcon.dispose();
     }
 }
