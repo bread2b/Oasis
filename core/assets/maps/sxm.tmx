@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="160" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="53">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="160" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="54">
  <tileset firstgid="1" source="../tilesets/grass.tsx"/>
  <tileset firstgid="962" source="../tilesets/house.tsx"/>
  <tileset firstgid="4806" source="../tilesets/treeset.tsx"/>
@@ -499,6 +499,12 @@
    <properties>
     <property name="state" value="ADULT"/>
     <property name="type" value="coconut"/>
+   </properties>
+  </object>
+  <object id="53" x="679.612" y="575.99">
+   <properties>
+    <property name="state" value="ADULT"/>
+    <property name="type" value="banana"/>
    </properties>
   </object>
  </objectgroup>

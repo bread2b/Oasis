@@ -14,6 +14,7 @@ import com.WOA.Oasis.Economy.CurrencyType;
 import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.Coconuttree;
+import com.WOA.Oasis.World.Tree.BananaTree;
 import com.WOA.Oasis.World.Drop.WorldDropManager;
 import com.WOA.Oasis.World.Crop.CornCrop;
 import com.WOA.Oasis.World.Crop.Crop;
@@ -69,8 +70,12 @@ private com.badlogic.gdx.graphics.Texture plantOverlayTex;
 
             if ("mango".equals(type)) {
                 trees.add(new Mangotree(x, y, Mangotree.State.valueOf(state)));
-            } else if ("coconut".equals(type)) {
+            } 
+            else if ("coconut".equals(type)) {
                 trees.add(new Coconuttree(x, y, Mangotree.State.valueOf(state)));
+            }
+            else if ("banana".equals(type)) {
+                trees.add(new BananaTree(x, y, BananaTree.State.valueOf(state)));
             }
         }
     }
