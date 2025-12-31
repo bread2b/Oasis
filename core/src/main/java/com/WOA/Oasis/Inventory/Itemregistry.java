@@ -22,7 +22,7 @@ public final class ItemRegistry {
 
     // ===== 种子 =====
     public static final Item CornSeed = new CornSeed();
-    public static final Item WeatSeed = new WheatSeed();
+    public static final Item WheatSeed = new WheatSeed();
 
     // ===== 工具 =====
     public static final Item Axe = new Axeitem();

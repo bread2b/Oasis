@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
         player.Getbag().Additem(ItemRegistry.Pick, 1);
         player.Getbag().Additem(ItemRegistry.Wood, 20);
         player.Getbag().Additem(ItemRegistry.CornSeed, 40);
-        player.Getbag().Additem(ItemRegistry.WeatSeed, 40);
+        player.Getbag().Additem(ItemRegistry.WheatSeed, 40);
     }
 
     @Override
