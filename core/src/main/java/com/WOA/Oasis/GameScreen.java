@@ -17,8 +17,9 @@ import com.WOA.Oasis.World.WorldManager;
 import com.WOA.Oasis.Inventory.ItemRegistry;
 import com.WOA.Oasis.Inventory.Items.seed.CornSeed;
 import com.WOA.Oasis.Inventory.Items.seed.WheatSeed;
+import com.badlogic.gdx.InputProcessor;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen,  InputProcessor{
 
     private final MainGame game;
 
@@ -32,7 +33,6 @@ public class GameScreen implements Screen {
     private static final float FIXED_STEP = 1f / 60f;
     private float accumulator = 0f;
 
-    private boolean bagVisible = false;
 
     public GameScreen(MainGame game) {
         this.game = game;
@@ -49,6 +49,8 @@ public class GameScreen implements Screen {
 
         player = new Player(1150, 900, 32, 32);
         hud = new Hud(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.input.setInputProcessor(this);
+
 
         // 初始物品
         player.Getbag().Additem(ItemRegistry.Axe, 1);
@@ -84,8 +86,8 @@ public class GameScreen implements Screen {
         world.render(game.batch);
         player.render(game.batch);
         game.batch.end();
-
-        hud.render(game.batch, player, bagVisible);
+        
+        hud.render(game.batch, player);
     }
 
     private void handleInput() {
@@ -108,9 +110,17 @@ public class GameScreen implements Screen {
         }
         
         // ✅ 鼠标左键点击：在鼠标指向 tile 种植
+        // 鼠标左键：只有在背包没打开 & 没点到 UI 才允许种地
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            world.tryPlantAtHover(player);
+
+            if (hud.handleClick(Gdx.input.getX(), Gdx.input.getY(), player)) {
+                return; // UI 已处理
+            }
+
+        world.tryPlantAtHover(player);
         }
+
+
 
 
         // 测试：按 G 生成金币
@@ -144,7 +154,7 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            bagVisible = !bagVisible;
+            hud.setBagVisible(!hud.isBagVisible());
         
         }
     }
@@ -171,19 +181,48 @@ public class GameScreen implements Screen {
 
     private void updateMouseTile() {
 
-    Vector3 worldPos = new Vector3(
-        Gdx.input.getX(),
-        Gdx.input.getY(),
-        0
-    );
+        Vector3 worldPos = new Vector3(
+            Gdx.input.getX(),
+            Gdx.input.getY(),
+            0
+        );
 
-    viewport.unproject(worldPos); // ✅ 关键修复点
+        viewport.unproject(worldPos); // ✅ 关键修复点
 
-    float tileX = ((int)(worldPos.x  / 16)) * 16;
-    float tileY = ((int)(worldPos.y  / 16)) * 16;
+        float tileX = ((int)(worldPos.x  / 16)) * 16;
+        float tileY = ((int)(worldPos.y  / 16)) * 16;
 
-    world.updateHoverTile(tileX, tileY, player);
-}
+        world.updateHoverTile(tileX, tileY, player);
+        }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        hud.onMouseDown(screenX, screenY, button, player);
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        hud.onMouseDrag(screenX, screenY);
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        hud.onMouseUp(screenX, screenY, button, player);
+        return true;
+    }
+
+    // ===== 下面这些必须写，不然编译不过 =====
+    @Override public boolean keyDown(int keycode) { return false; }
+    @Override public boolean keyUp(int keycode) { return false; }
+    @Override public boolean keyTyped(char character) { return false; }
+    @Override public boolean mouseMoved(int screenX, int screenY) { return false; }
+    @Override public boolean scrolled(float amountX, float amountY) { return false; }
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
 
 
 }

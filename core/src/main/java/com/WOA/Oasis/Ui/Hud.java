@@ -42,6 +42,13 @@ public class Hud {
     private static final float UI_SCALE = 2.0f;
     private static final float COUNT_PAD_PX = 2.0f;
 
+    // === Drag & Drop ===
+    private ItemStack draggingStack = null;
+    private int dragFromIndex = -1;
+    private boolean isDragging = false;
+    private float mouseX, mouseY;
+
+
     // =========================
     // Toolbar 布局数据（已校准）
     // =========================
@@ -95,7 +102,7 @@ public class Hud {
     // =====================================================
     // Render
     // =====================================================
-    public void render(SpriteBatch batch, Player player, boolean bagVisible) {
+    public void render(SpriteBatch batch, Player player) {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -116,6 +123,19 @@ public class Hud {
         drawCurrency(batch, player);
         drawHealthBar(batch, player);
         drawDebugInfo(batch, player);
+
+
+
+        if (isDragging && draggingStack != null && draggingStack.Item != null) {
+    float size = toolbarLayout.slotSize * UI_SCALE;
+    batch.draw(
+        draggingStack.Item.Icon,
+        mouseX - size / 2f,
+        mouseY - size / 2f,
+        size,
+        size
+    );
+}
 
         batch.end();
     }
@@ -348,4 +368,194 @@ public class Hud {
         heartEmpty.dispose();
         goldIcon.dispose();
     }
+
+
+    public void onMouseDown(int screenX, int screenY, int button, Player player) {
+        mouseX = screenX;
+        mouseY = screenHeight - screenY;
+
+        // 1️⃣ 先判断背包
+        int bagSlot = getBagSlotAt(mouseX, mouseY);
+        if (bagSlot != -1) {
+            ItemStack stack = player.Getbag().get(bagSlot);
+            if (stack != null && !stack.Isempty()) {
+                draggingStack = stack;
+                dragFromIndex = bagSlot;
+                isDragging = true;
+            }
+            return;
+        }
+
+        // 2️⃣ 再判断工具栏
+        int slot = getToolbarSlotAt(mouseX, mouseY);
+        if (slot != -1) {
+            player.Getbag().Selecthotbar(slot);
+        }
+    }
+
+
+
+    public void onMouseDrag(int screenX, int screenY) {
+        if (!bagVisible || !isDragging) return;
+
+        mouseX = screenX;
+        mouseY = screenHeight - screenY;
+    }
+
+
+    public void onMouseUp(int screenX, int screenY, int button, Player player) {
+        if (!isDragging) return;
+
+        mouseX = screenX;
+        mouseY = screenHeight - screenY;
+
+        int targetSlot = getBagSlotAt(mouseX, mouseY);
+        if (targetSlot != -1 && targetSlot != dragFromIndex) {
+            player.Getbag().swap(dragFromIndex, targetSlot);
+        }
+
+        draggingStack = null;
+        dragFromIndex = -1;
+        isDragging = false;
+    }
+
+
+    public void setBagVisible(boolean visible) {
+        this.bagVisible = visible;
+    }
+    // Hud.java
+    public boolean isBagVisible() {
+        return bagVisible;
+    }
+
+
+    private int getToolbarSlotAt(float x, float y) {
+
+        float scale = UI_SCALE;
+
+        float toolbarW = toolbarTex.getWidth() * scale;
+        float toolbarH = toolbarTex.getHeight() * scale;
+
+        float toolbarX = (screenWidth - toolbarW) / 2f;
+        float toolbarY = 8f;
+
+        float innerX = toolbarX + toolbarLayout.innerX * scale;
+        float innerY = toolbarY + (toolbarTex.getHeight() - toolbarLayout.innerHeight) / 2f * scale;
+
+        float step = toolbarLayout.slotStep * scale;
+        float size = toolbarLayout.slotSize * scale;
+
+        for (int i = 0; i < toolbarLayout.slotCount; i++) {
+            float sx = innerX + i * step;
+            float sy = innerY;
+
+            if (x >= sx && x <= sx + size &&
+                y >= sy && y <= sy + size) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int getBagSlotAt(float x, float y) {
+        if (!bagVisible) return -1;
+
+        float scale = UI_SCALE;
+
+        float bagW = bagTex.getWidth() * scale;
+        float bagH = bagTex.getHeight() * scale;
+
+        float bagX = (screenWidth - bagW) / 2f;
+        float bagY = (screenHeight - bagH) / 2f;
+
+        int cols = 10;
+        int rows = 2;
+
+        float innerX = bagX + bagLayout.innerX * scale;
+        float step = bagLayout.slotStep * scale;
+        float slotSize = bagLayout.slotSize * scale;
+
+        float gridHeight = (rows - 1) * step + slotSize;
+        float innerY = bagY + (bagH - gridHeight) / 2f;
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int index = row * cols + col;
+
+                float sx = innerX + col * step;
+                float sy = innerY + (rows - 1 - row) * step;
+
+                if (x >= sx && x <= sx + slotSize &&
+                    y >= sy && y <= sy + slotSize) {
+                    return index;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean isMouseOnUI(float screenX, float screenY) {
+
+        float y = screenHeight - screenY;
+
+        // 工具栏区域
+        if (isOnToolbar(screenX, y)) return true;
+
+        // 背包区域
+        if (bagVisible && isOnBag(screenX, y)) return true;
+
+        return false;
+    }
+
+    private boolean isOnToolbar(float x, float y) {
+        float scale = UI_SCALE;
+
+        float toolbarW = toolbarTex.getWidth() * scale;
+        float toolbarH = toolbarTex.getHeight() * scale;
+
+        float toolbarX = (screenWidth - toolbarW) / 2f;
+        float toolbarY = 8f;
+
+        return x >= toolbarX && x <= toolbarX + toolbarW
+            && y >= toolbarY && y <= toolbarY + toolbarH;
+    }
+    private boolean isOnBag(float x, float y) {
+        float scale = UI_SCALE;
+
+        float bagW = bagTex.getWidth() * scale;
+        float bagH = bagTex.getHeight() * scale;
+
+        float bagX = (screenWidth - bagW) / 2f;
+        float bagY = (screenHeight - bagH) / 2f;
+
+        return x >= bagX && x <= bagX + bagW
+            && y >= bagY && y <= bagY + bagH;
+    }
+
+    public boolean handleClick(float screenX, float screenY, Player player) {
+        mouseX = screenX;
+        mouseY = screenHeight - screenY;
+
+        // 背包
+        int bagSlot = getBagSlotAt(mouseX, mouseY);
+        if (bagSlot != -1) {
+            ItemStack stack = player.Getbag().get(bagSlot);
+            if (stack != null && !stack.Isempty()) {
+                draggingStack = stack;
+                dragFromIndex = bagSlot;
+                isDragging = true;
+            }
+            return true; // 👈 吃掉事件
+        }
+
+        // 工具栏
+        int slot = getToolbarSlotAt(mouseX, mouseY);
+        if (slot != -1) {
+            player.Getbag().Selecthotbar(slot);
+            return true;
+        }
+
+        return false;
+    }
+
 }

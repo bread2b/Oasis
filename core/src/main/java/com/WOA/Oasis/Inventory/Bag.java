@@ -94,4 +94,18 @@ public class Bag {
 
     return false;
 }
+
+public void set(int index, ItemStack stack) {
+    if (index < 0 || index >= TOTAL_SLOTS) return;
+    slots[index] = stack;
+}
+public void swap(int indexA, int indexB) {
+    if (indexA < 0 || indexA >= TOTAL_SLOTS) return;
+    if (indexB < 0 || indexB >= TOTAL_SLOTS) return;
+
+    ItemStack temp = slots[indexA];
+    slots[indexA] = slots[indexB];
+    slots[indexB] = temp;
+}
+
 }

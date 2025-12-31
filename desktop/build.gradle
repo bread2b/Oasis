@@ -5,7 +5,11 @@ plugins {
 
 application {
     mainClass = "com.WOA.Oasis.desktop.DesktopLauncher"
-    applicationDefaultJvmArgs = ["-XstartOnFirstThread"]   // ⭐⭐⭐ macOS 必加
+
+    // 只在 macOS 添加这个参数
+    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+    }
 }
 
 dependencies {
