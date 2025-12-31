@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
 
 import com.WOA.Oasis.Inventory.Bag;
 import com.WOA.Oasis.Economy.Wallet;
@@ -33,6 +35,8 @@ public class Player {
     private Bag bag;
     private Wallet wallet;
     private Health health;
+    private TextureAtlas atlas;
+
 
     public Player(int x, int y, int width, int height) {
         this.x = x;
@@ -54,6 +58,7 @@ public class Player {
         walkDown = anim("textures/playerdown1.png", "textures/playerdown2.png");
         walkLeft = anim("textures/playerleft1.png", "textures/playerleft2.png");
         walkRight = anim("textures/playerright1.png", "textures/playerright2.png");
+
     }
 
     private Animation<TextureRegion> anim(String a, String b) {
