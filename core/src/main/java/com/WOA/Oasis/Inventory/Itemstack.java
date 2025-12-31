@@ -48,4 +48,15 @@ public class ItemStack {
         Amount += add;
         return amount - add;
     }
+
+    public void Decrease(int amount) {
+    if (Isempty()) return;
+
+    Amount -= amount;
+
+    if (Amount <= 0) {
+        Clear();
+    }
+}
+
 }

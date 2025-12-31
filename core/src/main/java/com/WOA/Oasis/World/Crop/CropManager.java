@@ -49,18 +49,19 @@ public class CropManager {
     }
 
 
-    public boolean tryPlant(float x, float y) {
+    public boolean tryPlant(Crop crop) {
 
-    for (Crop crop : crops) {
-        if (Math.abs(crop.getX() - x) < 16 &&
-            Math.abs(crop.getY() - y) < 16) {
+    for (Crop c : crops) {
+        if (Math.abs(c.getX() - crop.getX()) < 16 &&
+            Math.abs(c.getY() - crop.getY()) < 16) {
             return false;
         }
     }
 
-    crops.add(new CornCrop(x, y, 0));
+    crops.add(crop);
     return true;
 }
+
 
     public Array<Crop> getCrops() {
         return crops;

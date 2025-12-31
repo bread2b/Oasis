@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 
 import com.WOA.Oasis.Player;
 import com.WOA.Oasis.Economy.CurrencyType;
+import com.WOA.Oasis.Inventory.Items.seed.SeedItem;
 import com.WOA.Oasis.World.Tree.TreeBase;
 import com.WOA.Oasis.World.Tree.Mangotree;
 import com.WOA.Oasis.World.Tree.Coconuttree;
@@ -155,11 +156,23 @@ private com.badlogic.gdx.graphics.Texture plantOverlayTex;
 }
 
 
-public void tryPlantAtHover() {
+public void tryPlantAtHover(Player player) {
     if (!hoverValid) return;
 
-    cropManager.tryPlant(hoverX, hoverY);
+    var stack = player.Getbag().getSelected();
+    if (stack == null || stack.Isempty()) return;
+
+    if (!(stack.Item instanceof SeedItem seed)) return;
+
+    Crop crop = seed.createCrop(hoverX, hoverY);
+
+    boolean planted = cropManager.tryPlant(crop);
+    if (planted) {
+        stack.Decrease(1);
+    }
 }
+
+
 
 
     public boolean canPlant(float x, float y) {

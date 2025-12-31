@@ -1,4 +1,4 @@
-package com.WOA.Oasis.Inventory.Items;
+package com.WOA.Oasis.Inventory.Items.crops;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.WOA.Oasis.Inventory.Item;

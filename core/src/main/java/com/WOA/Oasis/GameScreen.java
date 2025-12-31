@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.WOA.Oasis.Ui.Hud;
 import com.WOA.Oasis.World.WorldManager;
 import com.WOA.Oasis.Inventory.ItemRegistry;
+import com.WOA.Oasis.Inventory.Items.seed.CornSeed;
+import com.WOA.Oasis.Inventory.Items.seed.WheatSeed;
 
 public class GameScreen implements Screen {
 
@@ -52,6 +54,8 @@ public class GameScreen implements Screen {
         player.Getbag().Additem(ItemRegistry.Axe, 1);
         player.Getbag().Additem(ItemRegistry.Pick, 1);
         player.Getbag().Additem(ItemRegistry.Wood, 20);
+        player.Getbag().Additem(ItemRegistry.CornSeed, 40);
+        player.Getbag().Additem(ItemRegistry.WeatSeed, 40);
     }
 
     @Override
@@ -105,7 +109,7 @@ public class GameScreen implements Screen {
         
         // ✅ 鼠标左键点击：在鼠标指向 tile 种植
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            world.tryPlantAtHover();
+            world.tryPlantAtHover(player);
         }
 
 
