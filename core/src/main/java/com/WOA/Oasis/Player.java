@@ -55,20 +55,22 @@ public class Player {
         currentFrame = idleFrame;
 
         walkUp = anim("textures/playerup1.png", "textures/playerup2.png");
-        walkDown = anim("textures/playerdown1.png", "textures/playerdown2.png");
+        walkDown = anim("player/playerdown0.png", "player/playerdown1.png","player/playerdown2.png", "player/playerdown3.png");
         walkLeft = anim("textures/playerleft1.png", "textures/playerleft2.png");
         walkRight = anim("textures/playerright1.png", "textures/playerright2.png");
 
     }
 
-    private Animation<TextureRegion> anim(String a, String b) {
-        Texture t1 = new Texture(Gdx.files.internal(a));
-        Texture t2 = new Texture(Gdx.files.internal(b));
-        t1.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        t2.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    private Animation<TextureRegion> anim(String... paths) {
+        TextureRegion[] frames = new TextureRegion[paths.length];
 
-        Animation<TextureRegion> anim =
-                new Animation<>(0.15f, new TextureRegion(t1), new TextureRegion(t2));
+        for (int i = 0; i < paths.length; i++) {
+            Texture tex = new Texture(Gdx.files.internal(paths[i]));
+            tex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            frames[i] = new TextureRegion(tex);
+        }
+
+        Animation<TextureRegion> anim = new Animation<>(0.15f, frames);
         anim.setPlayMode(Animation.PlayMode.LOOP);
         return anim;
     }
