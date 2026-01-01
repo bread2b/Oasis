@@ -61,5 +61,29 @@
    <wangtile tileid="357" wangid="0,1,0,0,0,0,0,0"/>
    <wangtile tileid="358" wangid="0,0,0,0,0,0,0,1"/>
   </wangset>
+  <wangset name="field" type="corner" tile="-1">
+   <wangcolor name="field" color="#ff0000" tile="-1" probability="1"/>
+   <wangtile tileid="414" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="415" wangid="0,0,0,1,0,1,0,0"/>
+   <wangtile tileid="416" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="417" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="418" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="419" wangid="0,0,0,1,0,0,0,0"/>
+   <wangtile tileid="420" wangid="0,0,0,0,0,1,0,0"/>
+   <wangtile tileid="445" wangid="0,1,0,1,0,0,0,0"/>
+   <wangtile tileid="446" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="447" wangid="0,0,0,0,0,1,0,1"/>
+   <wangtile tileid="448" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="449" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="450" wangid="0,1,0,1,0,1,0,0"/>
+   <wangtile tileid="451" wangid="0,0,0,1,0,1,0,1"/>
+   <wangtile tileid="476" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="477" wangid="0,1,0,0,0,0,0,1"/>
+   <wangtile tileid="478" wangid="0,0,0,0,0,0,0,1"/>
+   <wangtile tileid="481" wangid="0,1,0,1,0,0,0,1"/>
+   <wangtile tileid="482" wangid="0,1,0,0,0,1,0,1"/>
+   <wangtile tileid="512" wangid="0,1,0,0,0,0,0,0"/>
+   <wangtile tileid="513" wangid="0,0,0,0,0,0,0,1"/>
+  </wangset>
  </wangsets>
 </tileset>

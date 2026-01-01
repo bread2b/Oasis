@@ -23,6 +23,10 @@ public abstract class Item {
         return Maxstack > 1;
     }
 
+    public boolean isSeed() {
+        return false;
+    }
+
     // 使用（默认空）
     public void Onuse() {
     }

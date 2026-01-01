@@ -16,6 +16,7 @@ import com.WOA.Oasis.Ui.Hud;
 import com.WOA.Oasis.World.WorldManager;
 import com.WOA.Oasis.Inventory.ItemRegistry;
 import com.WOA.Oasis.Inventory.Items.seed.CornSeed;
+import com.WOA.Oasis.Inventory.Items.seed.SeedItem;
 import com.WOA.Oasis.Inventory.Items.seed.WheatSeed;
 import com.badlogic.gdx.InputProcessor;
 
@@ -83,6 +84,12 @@ public class GameScreen implements Screen,  InputProcessor{
         world.getRenderer().setView(camera);
 
         game.batch.begin();
+        boolean showPlantPreview =
+        player.Getbag().getSelected() != null &&
+        player.Getbag().getSelected().Item instanceof SeedItem;
+
+        world.setPlantPreviewVisible(showPlantPreview);
+
         world.render(game.batch);
         player.render(game.batch);
         game.batch.end();

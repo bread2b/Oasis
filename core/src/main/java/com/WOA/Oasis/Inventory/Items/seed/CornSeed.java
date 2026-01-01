@@ -19,4 +19,9 @@ public class CornSeed extends Item implements SeedItem{
     public Crop createCrop(float x, float y) {
         return new CornCrop(x, y, 0);
     }
+
+    @Override
+    public boolean isSeed() {
+        return true;
+    }
 }

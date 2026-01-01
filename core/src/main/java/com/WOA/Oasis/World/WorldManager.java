@@ -36,6 +36,9 @@ public class WorldManager {
     private WorldDropManager dropManager;
     private CropManager cropManager;
 
+    private boolean allowPlantPreview = false;
+
+
     // ✅ 鼠标 hover 的 tile
 private float hoverX = -1;
 private float hoverY = -1;
@@ -112,12 +115,17 @@ private com.badlogic.gdx.graphics.Texture plantOverlayTex;
     }
 
     private void renderPlantPreview(SpriteBatch batch) {
-    if (!hoverValid) return;
+        if (!allowPlantPreview) return;
+        if (!hoverValid) return;
 
-    batch.setColor(0f, 1f, 0f, 0.35f);      // 半透明绿
-    batch.draw(plantOverlayTex, hoverX, hoverY, 16, 16);
-    batch.setColor(1f, 1f, 1f, 1f);         // 复原颜色
-}
+        batch.setColor(0f, 1f, 0f, 0.35f);      // 半透明绿
+        batch.draw(plantOverlayTex, hoverX, hoverY, 16, 16);
+        batch.setColor(1f, 1f, 1f, 1f);         // 复原颜色
+    }
+
+    public void setPlantPreviewVisible(boolean visible) {
+        this.allowPlantPreview = visible;
+    }
 
     public void handleTreeInteraction(Player player) {
         for (int i = trees.size - 1; i >= 0; i--) {
