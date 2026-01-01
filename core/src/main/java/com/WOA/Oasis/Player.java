@@ -61,6 +61,7 @@ public class Player {
 
     }
 
+    // 创建动画辅助函数
     private Animation<TextureRegion> anim(String... paths) {
         TextureRegion[] frames = new TextureRegion[paths.length];
 
