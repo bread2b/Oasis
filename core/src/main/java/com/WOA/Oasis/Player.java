@@ -54,10 +54,10 @@ public class Player {
         idleFrame = new TextureRegion(idleTex);
         currentFrame = idleFrame;
 
-        walkUp = anim("textures/playerup1.png", "textures/playerup2.png");
+        walkUp = anim("player/playerup0.png", "player/playerup1.png", "player/playerup2.png", "player/playerup3.png");
         walkDown = anim("player/playerdown0.png", "player/playerdown1.png","player/playerdown2.png", "player/playerdown3.png");
-        walkLeft = anim("textures/playerleft1.png", "textures/playerleft2.png");
-        walkRight = anim("textures/playerright1.png", "textures/playerright2.png");
+        walkLeft = anim("player/playerleft0.png", "player/playerleft1.png","player/playerleft2.png", "player/playerleft3.png");
+        walkRight = anim("player/playerright0.png", "player/playerright1.png","player/playerright2.png", "player/playerright3.png");
 
     }
 
