@@ -63,7 +63,7 @@ public class Hud {
 
     private final ToolbarLayout bagLayout = new ToolbarLayout(
         402, 102,     // 背包整体尺寸
-        1, 5,        // innerX / innerY（和 toolbar 一样）
+        2, 5,        // innerX / innerY（和 toolbar 一样）
         391, 80,     // 内部区域
         10,          // 20 格
         40,          // slot 间距
