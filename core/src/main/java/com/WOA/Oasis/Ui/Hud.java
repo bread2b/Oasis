@@ -62,8 +62,8 @@ public class Hud {
     );
 
     private final ToolbarLayout bagLayout = new ToolbarLayout(
-        402, 82,     // 背包整体尺寸
-        1, 0,        // innerX / innerY（和 toolbar 一样）
+        402, 102,     // 背包整体尺寸
+        1, 5,        // innerX / innerY（和 toolbar 一样）
         391, 80,     // 内部区域
         10,          // 20 格
         40,          // slot 间距
@@ -231,8 +231,8 @@ public class Hud {
 
         float slotSize = bagLayout.slotSize * scale;
         float slotHeight = slotSize;
-        float gridHeight = (rows - 1) * step + slotHeight;
-        float innerY = snap(bagY + (bagH - gridHeight) / 2f);
+
+        float innerY = snap(bagY + bagLayout.innerY * scale);
 
         float itemOffset =
                 (bagLayout.slotStep - bagLayout.slotSize) / 2f * scale;
@@ -472,11 +472,10 @@ public class Hud {
         int rows = 2;
 
         float innerX = bagX + bagLayout.innerX * scale;
+        float innerY = bagY + bagLayout.innerY * scale;
+
         float step = bagLayout.slotStep * scale;
         float slotSize = bagLayout.slotSize * scale;
-
-        float gridHeight = (rows - 1) * step + slotSize;
-        float innerY = bagY + (bagH - gridHeight) / 2f;
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
